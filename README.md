@@ -7,7 +7,7 @@
   <br />
 
   <img 
-    src="https://readme-typing-svg.demolab.com?font=Nunito&weight=700&size=28&duration=3000&pause=900&color=8B5E3C&center=true&vCenter=true&width=700&lines=Faro+Pet+%F0%9F%90%BE;Sua+carteira+digital+de+sa%C3%BAde+pet;Cuidado%2C+organiza%C3%A7%C3%A3o+e+carinho+em+um+s%C3%B3+lugar" 
+    src="https://readme-typing-svg.demolab.com?font=Nunito&weight=700&size=28&duration=3000&pause=900&color=8B5E3C&center=true&vCenter=true&width=700&lines=%F0%9F%90%BE;Sua+carteira+digital+de+sa%C3%BAde+pet;Cuidado%2C+organiza%C3%A7%C3%A3o+e+carinho+em+um+s%C3%B3+lugar" 
     alt="Typing SVG"
   />
 
