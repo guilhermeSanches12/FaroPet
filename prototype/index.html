@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/iconWebLogo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bem-vindo - Faro</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                orange: '#F97316',
+                'orange-dark': '#EA580C',
+                brown: '#451a03',
+                'brown-mid': '#7C3505',
+                beige: '#FEF3C7',
+                light: '#F4F4F0',
+              },
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>.blob-shape { border-radius: 42% 58% 65% 35% / 44% 38% 62% 56%; }</style>
+  </head>
+  <body class="bg-brand-light font-sans text-brand-brown min-h-screen">
+    <!-- Header & Hero Section -->
+    <header
+      class="bg-brand-beige rounded-b-[3rem] pt-6 pb-24 px-6 relative overflow-hidden"
+    >
+      <div class="blob-shape absolute -top-16 -right-16 w-56 h-56" style="background-color:#F97316;opacity:0.15;" aria-hidden="true"></div>
+      <div class="blob-shape absolute top-8 -left-12 w-36 h-36" style="background-color:#7C3505;opacity:0.1;" aria-hidden="true"></div>
+      <!-- Navigation -->
+      <nav
+        class="max-w-6xl mx-auto flex justify-between items-center mb-16 relative z-10"
+      >
+        <a href="index.html" class="flex items-center">
+          <img src="img/FaroLogo.png" alt="Faro" style="height:36px;width:auto;">
+        </a>
+        <div class="space-x-2 md:space-x-4">
+          <a
+            href="login.html"
+            class="text-brand-brown font-medium hover:text-brand-orange transition-colors hidden sm:inline-block"
+            >Entrar</a
+          >
+          <a
+            href="register.html"
+            class="bg-brand-orange text-white px-5 py-2.5 rounded-full font-medium hover:bg-orange-700 transition-colors shadow-sm"
+            >Criar Conta</a
+          >
+        </div>
+      </nav>
+
+      <!-- Hero Content -->
+      <div
+        class="max-w-6xl mx-auto flex flex-col md:flex-row items-center relative z-10 gap-12"
+      >
+        <div class="w-full md:w-1/2 pr-0 md:pr-10 text-center md:text-left">
+          <h1
+            class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
+          >
+            A saúde do seu pet, organizada em um
+            <span class="text-brand-orange">lugar amigável</span>.
+          </h1>
+          <p class="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+            Acompanhe vacinas, consultas, lembretes e informações importantes de
+            saúde com um assistente digital simples e dedicado ao seu pet.
+          </p>
+          <div
+            class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start"
+          >
+            <a
+              href="register.html"
+              class="bg-brand-orange text-white text-center px-8 py-4 rounded-full font-bold text-lg hover:bg-orange-700 transition-colors shadow-sm"
+            >
+              Começar
+            </a>
+            <a
+              href="login.html"
+              class="bg-white text-brand-brown border-2 border-brand-brown text-center px-8 py-4 rounded-full font-bold text-lg hover:bg-brand-brown hover:text-white transition-colors"
+            >
+              Já tenho uma conta
+            </a>
+          </div>
+        </div>
+        <div class="w-full md:w-1/2 flex justify-center mt-8 md:mt-0">
+          <!-- Organic Pet Image Shape -->
+          <div
+            class="relative w-full max-w-sm md:max-w-md aspect-square rounded-[40%_60%_70%_30%/40%_50%_60%_50%] overflow-hidden border-8 border-white shadow-xl"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+              alt="Cachorro feliz"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Benefits Section -->
+    <section class="py-24 px-6 bg-brand-light">
+      <div class="max-w-6xl mx-auto text-center mb-16">
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+          Tudo o que você precisa
+        </h2>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+          Nossas ferramentas foram criadas para facilitar a sua vida e garantir
+          o bem-estar do seu animalzinho.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div
+          class="bg-white p-8 rounded-[2rem] shadow-sm border border-amber-50 hover:-translate-y-1 transition-transform"
+        >
+          <div
+            class="w-16 h-16 bg-brand-beige rounded-2xl flex items-center justify-center mb-6 text-brand-orange"
+          >
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">Carteira Digital</h3>
+          <p class="text-gray-600">
+            Mantenha o registro de todas as vacinas do seu pet seguro e sempre
+            acessível na palma da mão.
+          </p>
+        </div>
+
+        <div
+          class="bg-white p-8 rounded-[2rem] shadow-sm border border-amber-50 hover:-translate-y-1 transition-transform"
+        >
+          <div
+            class="w-16 h-16 bg-brand-beige rounded-2xl flex items-center justify-center mb-6 text-brand-orange"
+          >
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">Lembretes Inteligentes</h3>
+          <p class="text-gray-600">
+            Nunca mais esqueça uma data importante. Receba alertas para vacinas,
+            vermífugos e consultas.
+          </p>
+        </div>
+
+        <div
+          class="bg-white p-8 rounded-[2rem] shadow-sm border border-amber-50 hover:-translate-y-1 transition-transform"
+        >
+          <div
+            class="w-16 h-16 bg-brand-beige rounded-2xl flex items-center justify-center mb-6 text-brand-orange"
+          >
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">Cuidado Personalizado</h3>
+          <p class="text-gray-600">
+            Orientações baseadas na idade, raça e perfil específico do seu pet
+            para uma vida mais saudável.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-24 px-6 bg-white">
+      <div
+        class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16"
+      >
+        <div class="w-full lg:w-1/2">
+          <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-6">
+            Como o Faro funciona?
+          </h2>
+          <p class="text-gray-600 mb-10 text-lg">
+            Em poucos passos, você organiza toda a rotina de cuidados do seu
+            melhor amigo de forma inteligente e visual.
+          </p>
+
+          <div class="space-y-8">
+            <div class="flex items-start">
+              <div
+                class="w-12 h-12 bg-brand-orange text-white rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0 shadow-md"
+              >
+                1
+              </div>
+              <div class="ml-5 mt-1">
+                <h4 class="text-xl font-bold mb-1">Cadastre seu pet</h4>
+                <p class="text-gray-600">
+                  Adicione foto e crie um perfil especial e completo para ele.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div
+                class="w-12 h-12 bg-brand-orange text-white rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0 shadow-md"
+              >
+                2
+              </div>
+              <div class="ml-5 mt-1">
+                <h4 class="text-xl font-bold mb-1">Informações básicas</h4>
+                <p class="text-gray-600">
+                  Insira dados como nome, idade, raça e gênero para personalizar
+                  o acompanhamento.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div
+                class="w-12 h-12 bg-brand-orange text-white rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0 shadow-md"
+              >
+                3
+              </div>
+              <div class="ml-5 mt-1">
+                <h4 class="text-xl font-bold mb-1">Histórico de saúde</h4>
+                <p class="text-gray-600">
+                  Registre as vacinas aplicadas no passado e visualize as
+                  próximas recomendadas.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div
+                class="w-12 h-12 bg-brand-orange text-white rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0 shadow-md"
+              >
+                4
+              </div>
+              <div class="ml-5 mt-1">
+                <h4 class="text-xl font-bold mb-1">Tudo organizado</h4>
+                <p class="text-gray-600">
+                  Receba lembretes e tenha controle total sobre consultas,
+                  agenda e rotinas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full lg:w-1/2 flex justify-center">
+          <!-- Abstract Mobile Representation -->
+          <div
+            class="bg-brand-beige p-6 rounded-[3rem] w-full max-w-sm border border-amber-100 shadow-2xl relative"
+          >
+            <div
+              class="bg-white rounded-[2rem] overflow-hidden border border-gray-100 p-6 min-h-[400px]"
+            >
+              <div class="flex items-center space-x-4 mb-8">
+                <div
+                  class="w-16 h-16 bg-gray-200 rounded-full border-4 border-brand-beige"
+                ></div>
+                <div>
+                  <div class="w-24 h-4 bg-gray-200 rounded mb-2"></div>
+                  <div class="w-32 h-3 bg-gray-100 rounded"></div>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <div
+                  class="w-full h-16 bg-orange-50 rounded-2xl flex items-center px-4"
+                >
+                  <div class="w-8 h-8 bg-orange-200 rounded-full mr-3"></div>
+                  <div class="w-24 h-3 bg-orange-200 rounded"></div>
+                </div>
+                <div
+                  class="w-full h-16 bg-gray-50 rounded-2xl flex items-center px-4"
+                >
+                  <div class="w-8 h-8 bg-gray-200 rounded-full mr-3"></div>
+                  <div class="w-32 h-3 bg-gray-200 rounded"></div>
+                </div>
+                <div
+                  class="w-full h-16 bg-gray-50 rounded-2xl flex items-center px-4"
+                >
+                  <div class="w-8 h-8 bg-gray-200 rounded-full mr-3"></div>
+                  <div class="w-20 h-3 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-24 px-6 bg-brand-light">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+            Funcionalidades Completas
+          </h2>
+          <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+            Tudo desenhado para ser intuitivo e garantir o melhor cuidado da
+            rotina do seu companheiro.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            class="p-8 border border-white rounded-[2rem] hover:shadow-md transition-shadow bg-white"
+          >
+            <h4
+              class="font-bold text-xl mb-3 flex items-center text-brand-brown"
+            >
+              <svg
+                class="w-6 h-6 mr-2 text-brand-orange"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                ></path>
+              </svg>
+              Gerenciamento de Perfil
+            </h4>
+            <p class="text-gray-600">
+              Dados básicos do pet, foto e anotações essenciais para fácil
+              identificação.
+            </p>
+          </div>
+          <div
+            class="p-8 border border-white rounded-[2rem] hover:shadow-md transition-shadow bg-white"
+          >
+            <h4
+              class="font-bold text-xl mb-3 flex items-center text-brand-brown"
+            >
+              <svg
+                class="w-6 h-6 mr-2 text-brand-orange"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                ></path>
+              </svg>
+              Calendário de Vacinas
+            </h4>
+            <p class="text-gray-600">
+              Visualize de forma clara e objetiva o que já foi aplicado e o que
+              ainda está pendente.
+            </p>
+          </div>
+          <div
+            class="p-8 border border-white rounded-[2rem] hover:shadow-md transition-shadow bg-white"
+          >
+            <h4
+              class="font-bold text-xl mb-3 flex items-center text-brand-brown"
+            >
+              <svg
+                class="w-6 h-6 mr-2 text-brand-orange"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              Próximas Vacinas
+            </h4>
+            <p class="text-gray-600">
+              Alertas e destaques visuais para as vacinas e cuidados
+              recomendados em breve.
+            </p>
+          </div>
+          <div
+            class="p-8 border border-white rounded-[2rem] hover:shadow-md transition-shadow bg-white"
+          >
+            <h4
+              class="font-bold text-xl mb-3 flex items-center text-brand-brown"
+            >
+              <svg
+                class="w-6 h-6 mr-2 text-brand-orange"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                ></path>
+              </svg>
+              Consultas Veterinárias
+            </h4>
+            <p class="text-gray-600">
+              Organize o histórico e a agenda de visitas ao veterinário sem
+              perder horários importantes.
+            </p>
+          </div>
+          <div
+            class="p-8 border border-white rounded-[2rem] hover:shadow-md transition-shadow bg-white"
+          >
+            <h4
+              class="font-bold text-xl mb-3 flex items-center text-brand-brown"
+            >
+              <svg
+                class="w-6 h-6 mr-2 text-brand-orange"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                ></path>
+              </svg>
+              Anotações de Saúde
+            </h4>
+            <p class="text-gray-600">
+              Registre pesos, alergias, restrições ou medicações contínuas em um
+              único lugar seguro.
+            </p>
+          </div>
+          <div
+            class="p-8 border border-white rounded-[2rem] hover:shadow-md transition-shadow bg-white"
+          >
+            <h4
+              class="font-bold text-xl mb-3 flex items-center text-brand-brown"
+            >
+              <svg
+                class="w-6 h-6 mr-2 text-brand-orange"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                ></path>
+              </svg>
+              Acesso Fácil a Tutores
+            </h4>
+            <p class="text-gray-600">
+              Navegação adaptada, intuitiva e rápida pelo celular, tablet ou
+              computador pessoal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust and Care Section -->
+    <section
+      class="py-20 px-6 bg-brand-orange text-white text-center rounded-[3rem] max-w-6xl mx-auto my-12 shadow-lg relative overflow-hidden"
+    >
+      <div
+        class="absolute w-64 h-64 bg-white opacity-10 rounded-full -top-10 -right-10"
+      ></div>
+      <div
+        class="absolute w-40 h-40 bg-white opacity-10 rounded-full bottom-0 left-10"
+      ></div>
+      <div class="max-w-3xl mx-auto relative z-10">
+        <svg
+          class="w-16 h-16 mx-auto mb-6 opacity-90"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+          ></path>
+        </svg>
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-6">
+          Apoiamos você no cuidado preventivo
+        </h2>
+        <p class="text-lg md:text-xl opacity-90 leading-relaxed">
+          Ajudamos tutores a se manterem organizados com as informações da saúde
+          do seu pet. Um ambiente simples, acessível e confiável.
+        </p>
+      </div>
+    </section>
+
+    <!-- Final Call-to-Action -->
+    <section class="py-24 px-6 text-center bg-brand-light">
+      <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+        Pronto para cuidar melhor do seu pet?
+      </h2>
+      <p class="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
+        Crie sua conta agora e comece a organizar a vida do seu melhor amigo em
+        poucos minutos.
+      </p>
+      <a
+        href="register.html"
+        class="inline-block bg-brand-brown text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-gray-800 transition-colors shadow-md"
+      >
+        Criar Conta Gratuitamente
+      </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-10 px-6 border-t border-amber-100">
+      <div
+        class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm"
+      >
+        <div class="mb-4 md:mb-0">
+          <img src="img/FaroLogo.png" alt="Faro" style="height:28px;width:auto;">
+        </div>
+        <div class="space-x-6">
+          <a href="#" class="hover:text-brand-brown transition-colors"
+            >Sobre nós</a
+          >
+          <a href="#" class="hover:text-brand-brown transition-colors"
+            >Termos de uso</a
+          >
+          <a href="#" class="hover:text-brand-brown transition-colors"
+            >Privacidade</a
+          >
+        </div>
+        <div class="mt-6 md:mt-0">
+          &copy; 2026 Faro. Todos os direitos reservados.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
