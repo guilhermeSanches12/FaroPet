@@ -27,6 +27,8 @@ export const reminders = pgTable('reminders', {
   remindAt: timestamp('remind_at').notNull(),
   isSent: boolean('is_sent').default(false).notNull(),
   isDismissed: boolean('is_dismissed').default(false).notNull(),
+  isRead: boolean('is_read').default(false).notNull(),
+  pushSentAt: timestamp('push_sent_at'),
   referenceId: uuid('reference_id'),
   referenceTable: varchar('reference_table', { length: 60 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),

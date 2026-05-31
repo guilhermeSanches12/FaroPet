@@ -20,6 +20,7 @@ export function MedicationForm() {
     type: (editing?.type ?? "pill") as MedType,
     reason: editing?.reason ?? "",
     observations: editing?.observations ?? "",
+    prescribedBy: editing?.prescribedBy ?? "",
   });
 
   const set = (k: keyof typeof form) => (v: string | boolean) => setForm(f => ({ ...f, [k]: v }));
@@ -69,6 +70,7 @@ export function MedicationForm() {
           <label className="text-sm font-medium text-gray-700">Deve ser administrado em jejum</label>
         </div>
         <Input label="Motivo da medicação" value={form.reason} onChange={set("reason")} placeholder="Ex: Antipulgas" />
+        <Input label="Prescrito por — opcional" value={form.prescribedBy} onChange={set("prescribedBy")} placeholder="Dr. Nome" />
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700">Observações — opcional</label>
           <textarea

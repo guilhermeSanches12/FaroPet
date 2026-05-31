@@ -4,19 +4,19 @@ import { useApp } from "@/hooks/useApp";
 import { Btn } from "@/components/shared";
 
 export function Login() {
-  const { navigate, login, showToast } = useApp();
+  const { navigate, login } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const submit = () => {
+  const submit = async () => {
     const errs: Record<string, string> = {};
     if (!email) errs.email = "Informe o e-mail";
     else if (!email.includes("@")) errs.email = "E-mail inválido";
     if (!password) errs.password = "Informe a senha";
     if (Object.keys(errs).length) { setErrors(errs); return; }
-    if (!login(email, password)) showToast("E-mail ou senha inválidos", "error");
+    await login(email, password);
   };
 
   return (
@@ -67,7 +67,7 @@ export function Login() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  onKeyDown={e => e.key === "Enter" && submit()}
+                  onKeyDown={e => { if (e.key === "Enter") submit(); }}
                   className={`w-full pl-11 pr-4 py-3.5 rounded-2xl border text-sm bg-white outline-none transition-all font-medium ${errors.email ? "border-red-400" : "border-gray-200 focus:border-primary"}`}
                 />
               </div>
@@ -84,7 +84,7 @@ export function Login() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  onKeyDown={e => e.key === "Enter" && submit()}
+                  onKeyDown={e => { if (e.key === "Enter") submit(); }}
                   className={`w-full pl-11 pr-12 py-3.5 rounded-2xl border text-sm bg-white outline-none transition-all font-medium ${errors.password ? "border-red-400" : "border-gray-200 focus:border-primary"}`}
                 />
                 <button onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
@@ -94,14 +94,7 @@ export function Login() {
               {errors.password && <span className="text-xs text-red-500">{errors.password}</span>}
             </div>
 
-            <div className="flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => { setEmail("roberta@email.com"); setPassword("123456"); setErrors({}); }}
-                className="text-gray-400 text-xs hover:text-primary transition-colors"
-              >
-                Usar conta demo
-              </button>
+            <div className="flex items-center justify-end">
               <button onClick={() => navigate("forgot")} className="text-primary text-sm font-semibold">
                 Esqueci minha senha
               </button>

@@ -29,9 +29,8 @@ export function SidebarNav() {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-white dark:bg-[#241C14] border-r border-gray-100 dark:border-[#3D2E22] fixed inset-y-0 left-0 z-20">
-      {/* Logo */}
-      <div className="px-5 py-5 border-b border-gray-100 dark:border-[#3D2E22] flex items-center">
+    <aside className="hidden md:flex flex-col w-64 bg-sidebar border-r border-sidebar-border fixed inset-y-0 left-0 z-20">
+      <div className="px-5 py-5 border-b border-sidebar-border flex items-center">
         <img src="/img/FaroLogo.png" alt="Faro" className="h-8 object-contain" />
       </div>
 
@@ -48,8 +47,8 @@ export function SidebarNav() {
               onClick={() => navigate(item.id as Page)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all relative w-full text-left ${
                 active
-                  ? "bg-primary/10 text-primary dark:bg-primary/20"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#332820]"
+                  ? "bg-primary/10 text-primary"
+                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
               }`}
             >
               {item.isPawImg ? (
@@ -77,19 +76,19 @@ export function SidebarNav() {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-gray-100 dark:border-[#3D2E22]">
+      <div className="px-3 py-4 border-t border-sidebar-border">
         <div className="flex items-center gap-3 px-3 py-2 mb-1">
-          <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-[#3D2E22] flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shrink-0">
             <User size={15} className="text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">{user?.firstName} {user?.lastName}</p>
-            <p className="text-[11px] text-gray-400 dark:text-gray-500 truncate">{user?.email}</p>
+            <p className="text-xs font-semibold text-sidebar-foreground truncate">{user?.firstName} {user?.lastName}</p>
+            <p className="text-[11px] text-muted-foreground truncate">{user?.email}</p>
           </div>
         </div>
         <button
           onClick={logout}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#332820] transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
         >
           <LogOut size={16} />
           Sair da conta

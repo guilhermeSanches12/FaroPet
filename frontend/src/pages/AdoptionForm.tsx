@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { useApp } from "@/hooks/useApp";
 import { BottomNav } from "@/components/layout/BottomNav";
+import type { AdoptionPost } from "@/types";
 
 const BR_STATES = [
   "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS",
@@ -19,15 +20,26 @@ const BREEDS: Record<string, string[]> = {
 const fieldCls = "w-full border border-gray-200 rounded-xl px-3 py-3.5 text-sm bg-gray-50 focus:outline-none focus:border-[#F97316] transition-colors";
 
 export function AdoptionForm() {
-  const { navigate, addAdoption } = useApp();
+  const { navigate, navData, addAdoption, updateAdoption, deleteAdoption } = useApp();
+  const editing = navData as AdoptionPost | null;
+
   const [form, setForm] = useState({
-    animalName: "", animalType: "", breed: "", gender: "",
-    age: "", size: "", description: "", healthInfo: "",
-    vaccinationInfo: "", requirements: "",
-    city: "", state: "",
-    contactName: "", contactPhone: "", contactWhatsapp: "",
-    observations: "",
-    status: "available" as const,
+    animalName: editing?.animalName ?? "",
+    animalType: editing?.animalType ?? "",
+    breed: editing?.breed ?? "",
+    gender: editing?.gender ?? "",
+    age: editing?.age ?? "",
+    size: editing?.size ?? "",
+    description: editing?.description ?? "",
+    healthInfo: editing?.healthInfo ?? "",
+    vaccinationInfo: editing?.vaccinationInfo ?? "",
+    requirements: editing?.requirements ?? "",
+    city: editing?.city ?? "",
+    state: editing?.state ?? "",
+    contactName: editing?.contactName ?? "",
+    contactPhone: editing?.contactPhone ?? "",
+    contactWhatsapp: editing?.contactWhatsapp ?? "",
+    observations: editing?.observations ?? "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -48,28 +60,40 @@ export function AdoptionForm() {
     return Object.keys(errs).length === 0;
   };
 
+  const payload = {
+    animalName: form.animalName,
+    animalType: form.animalType,
+    breed: form.breed || undefined,
+    gender: form.gender,
+    age: form.age || "",
+    size: form.size || undefined,
+    description: form.description,
+    healthInfo: form.healthInfo || undefined,
+    vaccinationInfo: form.vaccinationInfo || undefined,
+    requirements: form.requirements || undefined,
+    city: form.city,
+    state: form.state,
+    contactName: form.contactName,
+    contact: form.contactPhone || form.contactWhatsapp || "",
+    contactPhone: form.contactPhone || undefined,
+    contactWhatsapp: form.contactWhatsapp || undefined,
+    observations: form.observations || undefined,
+    status: (editing?.status ?? "available") as AdoptionPost["status"],
+  };
+
   const submit = () => {
     if (!validate()) return;
-    addAdoption({
-      animalName: form.animalName,
-      animalType: form.animalType,
-      breed: form.breed || undefined,
-      gender: form.gender,
-      age: form.age || "",
-      size: form.size || undefined,
-      description: form.description,
-      healthInfo: form.healthInfo || undefined,
-      vaccinationInfo: form.vaccinationInfo || undefined,
-      requirements: form.requirements || undefined,
-      city: form.city,
-      state: form.state,
-      contactName: form.contactName,
-      contact: form.contactPhone || form.contactWhatsapp,
-      contactPhone: form.contactPhone || undefined,
-      contactWhatsapp: form.contactWhatsapp || undefined,
-      observations: form.observations || undefined,
-      status: "available",
-    });
+    if (editing) {
+      updateAdoption({ ...editing, ...payload });
+    } else {
+      addAdoption(payload);
+    }
+    navigate("adoption");
+  };
+
+  const handleDelete = () => {
+    if (!editing) return;
+    deleteAdoption(editing.id);
     navigate("adoption");
   };
 
@@ -88,7 +112,7 @@ export function AdoptionForm() {
             <ChevronLeft size={20} className="text-gray-600 dark:text-gray-400" />
           </button>
           <div className="flex-1">
-            <h1 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100">Publicar para Adoção</h1>
+            <h1 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100">{editing ? "Editar post" : "Publicar para Adoção"}</h1>
             <p className="text-xs text-gray-400 hidden lg:block">Ajude um animal a encontrar um lar</p>
           </div>
         </div>
@@ -278,9 +302,17 @@ export function AdoptionForm() {
             className="flex-1 py-3.5 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity shadow-sm"
             style={{ background: "#F97316" }}
           >
-            Publicar para adoção
+            {editing ? "Salvar alterações" : "Publicar para adoção"}
           </button>
         </div>
+        {editing && (
+          <button
+            onClick={handleDelete}
+            className="w-full py-3 rounded-xl text-sm font-semibold text-red-500 border border-red-200 bg-red-50 hover:bg-red-100 transition-colors"
+          >
+            Excluir post
+          </button>
+        )}
       </main>
 
       <BottomNav />

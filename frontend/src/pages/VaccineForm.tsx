@@ -6,7 +6,7 @@ import { getVaccineOptionsBySpecies, getVaccineRule } from "@/utils/helpers";
 import type { Vaccine } from "@/types";
 
 export function VaccineForm() {
-  const { navData, navigate, pets, vaccines, addVaccine, updateVaccine, deleteVaccine } = useApp();
+  const { navData, navigate, pets, vaccines, addVaccine, updateVaccine, deleteVaccine, loadPetData } = useApp();
   const editing = navData as Vaccine | null;
 
   const [petId, setPetId] = useState(editing?.petId ?? (pets[0]?.id ?? ""));
@@ -31,6 +31,8 @@ export function VaccineForm() {
 
   useEffect(() => {
     if (!editing) setVaccineName("");
+    if (petId) loadPetData(petId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [petId]);
 
   const submit = () => {
@@ -80,7 +82,14 @@ export function VaccineForm() {
             <p className="font-semibold">{rule.name}</p>
             {rule.recommendedAge && <p className="mt-0.5">Indicada para: {rule.recommendedAge}</p>}
             {rule.notes && <p className="mt-0.5">{rule.notes}</p>}
-            <p className="font-medium mt-1">Dose {currentDose} de {rule.totalDoses}{rule.boosterIntervalDays ? " + reforços" : ""}</p>
+            {currentDose > rule.totalDoses ? (
+              <p className="font-medium mt-1">
+                {currentDose - rule.totalDoses === 1 ? "Reforço" : `Reforço ${currentDose - rule.totalDoses}`}
+                {rule.boosterIntervalDays ? ` · a cada ${rule.boosterIntervalDays} dias` : ""}
+              </p>
+            ) : (
+              <p className="font-medium mt-1">Dose {currentDose} de {rule.totalDoses}{rule.boosterIntervalDays ? " + reforços" : ""}</p>
+            )}
           </div>
         )}
 

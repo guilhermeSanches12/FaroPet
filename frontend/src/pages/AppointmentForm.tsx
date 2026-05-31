@@ -18,6 +18,8 @@ export function AppointmentForm() {
     hasMedication: editing?.hasMedication ?? false,
     medicationDetails: editing?.medicationDetails ?? "",
     observations: editing?.observations ?? "",
+    diagnosis: editing?.diagnosis ?? "",
+    prescription: editing?.prescription ?? "",
     status: (editing?.status ?? "scheduled") as AppointmentStatus,
   });
 
@@ -70,6 +72,26 @@ export function AppointmentForm() {
             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-primary resize-none h-20"
           />
         </div>
+        {form.status === "completed" && (
+          <>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-700">Diagnóstico — opcional</label>
+              <textarea
+                value={form.diagnosis}
+                onChange={e => set("diagnosis")(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-primary resize-none h-20"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-700">Prescrição — opcional</label>
+              <textarea
+                value={form.prescription}
+                onChange={e => set("prescription")(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-primary resize-none h-20"
+              />
+            </div>
+          </>
+        )}
         <Btn variant="primary" full size="lg" onClick={submit}>Salvar consulta</Btn>
         {editing && (
           <Btn variant="danger" full onClick={() => { deleteAppointment(editing.id); navigate("appointments"); }}>Excluir consulta</Btn>

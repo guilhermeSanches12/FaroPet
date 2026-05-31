@@ -15,9 +15,9 @@ export function Btn({
 }: BtnProps) {
   const base = "font-semibold rounded-xl transition-all flex items-center justify-center gap-2";
   const variants = {
-    primary: "bg-primary text-white active:opacity-80",
-    outline: "border-2 border-primary text-primary bg-transparent active:bg-orange-50",
-    ghost: "text-gray-600 bg-gray-100 active:bg-gray-200",
+    primary: "bg-primary text-primary-foreground active:opacity-80",
+    outline: "border-2 border-primary text-primary bg-transparent active:bg-accent",
+    ghost: "text-muted-foreground bg-muted active:bg-accent",
     danger: "bg-red-500 text-white active:opacity-80",
   };
   const sizes = { sm: "px-3 py-2 text-xs", md: "px-5 py-3 text-sm", lg: "px-6 py-4 text-base" };

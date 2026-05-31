@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Bell, Plus, Syringe, ArrowRight, Calendar, MapPin, PawPrint, Pill } from "lucide-react";
 import { useApp } from "@/hooks/useApp";
 import { Card } from "@/components/shared";
@@ -19,7 +20,7 @@ function PetAvatar({ type, photo, name }: { type: PetType; photo?: string; name:
 function SectionHeader({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) {
   return (
     <div className="flex items-center justify-between mb-3">
-      <h2 className="font-bold text-gray-900 text-base">{title}</h2>
+      <h2 className="font-bold text-foreground text-base">{title}</h2>
       {action && onAction && (
         <button onClick={onAction} className="text-primary text-xs font-semibold hover:underline">{action}</button>
       )}
@@ -28,7 +29,12 @@ function SectionHeader({ title, action, onAction }: { title: string; action?: st
 }
 
 export function HomeScreen() {
-  const { user, navigate, pets, vaccines, appointments, medications, notifications, clinics } = useApp();
+  const { user, navigate, pets, vaccines, appointments, medications, notifications, clinics, loadPetData } = useApp();
+
+  useEffect(() => {
+    pets.forEach(p => loadPetData(p.id));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pets.length]);
   const unread = notifications.filter(n => !n.read).length;
   const pendingVaccines = vaccines.filter(v => v.status === "pending");
   const scheduledVaccines = vaccines.filter(v => v.status === "scheduled");
@@ -41,20 +47,20 @@ export function HomeScreen() {
   const todayLabel = `${dayNames[today.getDay()]}, ${today.getDate()} de ${monthNames[today.getMonth()]}`;
 
   return (
-    <div className="flex flex-col bg-[#f8f9fa] min-h-screen">
+    <div className="flex flex-col bg-background min-h-screen">
       {/* ── Welcome Header ───────────────────────────────────────── */}
-      <div className="bg-white border-b border-gray-100 px-5 pt-10 pb-5 md:pt-8">
+      <div className="bg-card border-b border-border px-5 pt-10 pb-5 md:pt-8">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-orange-100 shadow-sm shrink-0">
               <img src={imgUserAvatar} alt="avatar" className="w-full h-full object-cover" />
             </div>
             <div>
-              <p className="text-gray-400 text-xs font-medium">{todayLabel}</p>
-              <h1 className="text-xl font-black text-gray-900 leading-tight">
+              <p className="text-muted-foreground text-xs font-medium">{todayLabel}</p>
+              <h1 className="text-xl font-black text-foreground leading-tight">
                 Olá, {user?.firstName}!
               </h1>
-              <p className="text-gray-500 text-xs font-medium">
+              <p className="text-muted-foreground text-xs font-medium">
                 {pets.length > 0
                   ? `${pets.length} pet${pets.length > 1 ? "s" : ""} registrado${pets.length > 1 ? "s" : ""}`
                   : "Bem-vindo ao Faro"}
@@ -63,11 +69,11 @@ export function HomeScreen() {
           </div>
           <button
             onClick={() => navigate("notifications")}
-            className="relative w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+            className="relative w-10 h-10 bg-muted rounded-xl flex items-center justify-center text-muted-foreground hover:bg-accent transition-colors"
           >
             <Bell size={18} />
             {unread > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full" />
+              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-card rounded-full" />
             )}
           </button>
         </div>
@@ -75,7 +81,7 @@ export function HomeScreen() {
 
       {/* ── Stats strip ──────────────────────────────────────────── */}
       {(pendingVaccines.length > 0 || scheduledVaccines.length > 0 || upcomingAppointments.length > 0) && (
-        <div className="bg-white border-b border-gray-100 px-5 pb-4">
+        <div className="bg-card border-b border-border px-5 pb-4">
           <div className="max-w-6xl mx-auto flex flex-wrap gap-2 pt-1">
             {pendingVaccines.length > 0 && (
               <button onClick={() => navigate("vaccines")} className="flex items-center gap-2.5 bg-orange-50 border border-orange-100 rounded-xl px-4 py-2.5 hover:border-orange-300 transition-colors">
@@ -177,14 +183,14 @@ export function HomeScreen() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <span className="inline-block text-[9px] px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 font-bold uppercase tracking-wide mb-1">Consulta</span>
-                          <p className="text-sm font-bold text-gray-900 truncate">{a.reason}</p>
+                          <p className="text-sm font-bold text-foreground truncate">{a.reason}</p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs text-gray-500 font-medium">{a.time}</span>
-                            {pet && <><span className="w-1 h-1 rounded-full bg-gray-300" /><span className="text-xs text-gray-400 truncate">{pet.name}</span></>}
+                            <span className="text-xs text-muted-foreground font-medium">{a.time}</span>
+                            {pet && <><span className="w-1 h-1 rounded-full bg-muted-foreground/50" /><span className="text-xs text-muted-foreground truncate">{pet.name}</span></>}
                           </div>
                           <div className="flex items-center gap-1 mt-0.5">
-                            <MapPin size={10} className="text-gray-400 shrink-0" />
-                            <span className="text-[11px] text-gray-400 truncate">{a.location}</span>
+                            <MapPin size={10} className="text-muted-foreground shrink-0" />
+                            <span className="text-[11px] text-muted-foreground truncate">{a.location}</span>
                           </div>
                         </div>
                         <button onClick={() => navigate("appointment-form", a)} className="shrink-0">
@@ -207,13 +213,13 @@ export function HomeScreen() {
                   {activeMeds.map(m => {
                     const pet = pets.find(p => p.id === m.petId);
                     return (
-                      <div key={m.id} className="bg-white rounded-xl p-3 flex items-center gap-3 shadow-sm border border-gray-100">
+                      <div key={m.id} className="bg-card rounded-xl p-3 flex items-center gap-3 shadow-sm border border-border">
                         <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
                           <Pill size={18} className="text-green-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-gray-900 truncate">{m.name}</p>
-                          <p className="text-xs text-gray-400">{m.dosage} · {m.frequency}{pet ? ` · ${pet.name}` : ""}</p>
+                          <p className="text-sm font-bold text-foreground truncate">{m.name}</p>
+                          <p className="text-xs text-muted-foreground">{m.dosage} · {m.frequency}{pet ? ` · ${pet.name}` : ""}</p>
                         </div>
                       </div>
                     );
@@ -230,9 +236,9 @@ export function HomeScreen() {
             <section>
               <SectionHeader title="Próximas vacinas" action="Ver todas" onAction={() => navigate("vaccines")} />
               {vaccines.filter(v => v.status !== "taken").length === 0 ? (
-                <div className="bg-white rounded-2xl p-5 border border-gray-100 text-center">
-                  <Syringe size={28} className="text-gray-200 mx-auto mb-2" />
-                  <p className="text-sm text-gray-400">Nenhuma vacina pendente.</p>
+                <div className="bg-card rounded-2xl p-5 border border-border text-center">
+                  <Syringe size={28} className="text-muted-foreground/40 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Nenhuma vacina pendente.</p>
                   <button onClick={() => navigate("vaccine-form")} className="mt-2 text-xs text-primary font-semibold hover:underline">
                     Registrar vacina
                   </button>
@@ -242,18 +248,18 @@ export function HomeScreen() {
                   {vaccines.filter(v => v.status !== "taken").slice(0, 4).map(v => {
                     const pet = pets.find(p => p.id === v.petId);
                     return (
-                      <div key={v.id} className="bg-white rounded-xl p-3 flex items-center gap-3 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate("vaccine-form", v)}>
+                      <div key={v.id} className="bg-card rounded-xl p-3 flex items-center gap-3 shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate("vaccine-form", v)}>
                         <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-orange-100">
                           <Syringe size={16} className="text-orange-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 truncate">{v.name}</p>
+                          <p className="text-sm font-semibold text-foreground truncate">{v.name}</p>
                           <div className="flex items-center gap-1.5">
                             <span className="text-[10px] font-bold text-orange-500">
                               {v.status === "scheduled" ? "Agendada" : "Pendente"}
                             </span>
-                            {v.scheduledDate && <span className="text-[10px] text-gray-400">· {fmtDate(v.scheduledDate)}</span>}
-                            {pet && <span className="text-[10px] text-gray-400">· {pet.name}</span>}
+                            {v.scheduledDate && <span className="text-[10px] text-muted-foreground">· {fmtDate(v.scheduledDate)}</span>}
+                            {pet && <span className="text-[10px] text-muted-foreground">· {pet.name}</span>}
                           </div>
                         </div>
                       </div>
@@ -275,15 +281,15 @@ export function HomeScreen() {
                 <SectionHeader title="Clínicas próximas" action="Ver todas" onAction={() => navigate("clinics")} />
                 <div className="flex flex-col gap-2">
                   {clinics.slice(0, 3).map(c => (
-                    <div key={c.id} className="bg-white rounded-xl p-3 flex items-center gap-3 shadow-sm border border-gray-100">
-                      <div className="w-10 h-10 rounded-xl overflow-hidden border border-gray-100 shrink-0">
+                    <div key={c.id} className="bg-card rounded-xl p-3 flex items-center gap-3 shadow-sm border border-border">
+                      <div className="w-10 h-10 rounded-xl overflow-hidden border border-border shrink-0">
                         <img src={c.image} alt={c.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
+                        <p className="text-sm font-semibold text-foreground truncate">{c.name}</p>
                         <div className="flex items-center gap-1">
                           <MapPin size={10} className="text-primary" />
-                          <span className="text-xs text-gray-400">{c.distance}</span>
+                          <span className="text-xs text-muted-foreground">{c.distance}</span>
                         </div>
                       </div>
                       <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">

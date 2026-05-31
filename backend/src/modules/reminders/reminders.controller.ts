@@ -23,6 +23,11 @@ import { CreateReminderDto, UpdateReminderDto } from './reminders.dto';
 export class RemindersController {
   constructor(private readonly remindersService: RemindersService) {}
 
+  @Get('me')
+  findAllByUser(@CurrentUser() user: { userId: string }) {
+    return this.remindersService.findAllByUser(user.userId);
+  }
+
   @Get()
   findAll(
     @Query('petId', ParseUUIDPipe) petId: string,
@@ -71,5 +76,13 @@ export class RemindersController {
     @CurrentUser() user: { userId: string },
   ) {
     return this.remindersService.dismiss(id, user.userId);
+  }
+
+  @Patch(':id/read')
+  markRead(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: { userId: string },
+  ) {
+    return this.remindersService.markRead(id, user.userId);
   }
 }

@@ -120,6 +120,14 @@ export function getVaccineRule(name: string, species: string): VaccineRule | und
   return VACCINE_RULES.find(r => r.name === name && r.species.includes(species as PetType));
 }
 
+export function getDoseLabel(vaccineName: string, petType: string, dose?: number): string | null {
+  if (!dose) return null;
+  const rule = getVaccineRule(vaccineName, petType);
+  if (!rule || dose <= rule.totalDoses) return `Dose ${dose}`;
+  const boosterNum = dose - rule.totalDoses;
+  return boosterNum === 1 ? "Reforço" : `Reforço ${boosterNum}`;
+}
+
 // Legacy: kept for backward compatibility
 export const VACCINE_OPTIONS = [
   { value: "V8 Polivalente", label: "V8 Polivalente" },

@@ -7,11 +7,11 @@ export function Clinics() {
   const { clinics } = useApp();
 
   return (
-    <div className="flex flex-col bg-[#FFF8F0] min-h-screen pb-20 md:pb-6">
-      <div className="bg-white border-b border-gray-100 px-5 pt-10 pb-4 md:pt-8">
+    <div className="flex flex-col bg-background min-h-screen pb-20 md:pb-6">
+      <div className="bg-card border-b border-border px-5 pt-10 pb-4 md:pt-8">
         <div className="max-w-5xl mx-auto">
-          <h1 className="font-bold text-2xl text-gray-900">Clínicas próximas</h1>
-          <p className="text-sm text-gray-400 mt-0.5">Encontre clínicas veterinárias perto de você</p>
+          <h1 className="font-bold text-2xl text-foreground">Clínicas próximas</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Encontre clínicas veterinárias perto de você</p>
         </div>
       </div>
 
@@ -24,24 +24,24 @@ export function Clinics() {
               </div>
               <div className="p-4">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-gray-800 flex-1 pr-2">{c.name}</h3>
+                  <h3 className="font-semibold text-foreground flex-1 pr-2">{c.name}</h3>
                   <div className="flex items-center gap-1 shrink-0">
                     <Star size={13} className="text-yellow-400 fill-yellow-400" />
-                    <span className="text-sm font-semibold text-gray-700">{c.rating}</span>
+                    <span className="text-sm font-semibold text-foreground">{c.rating}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 mb-1">
                   <MapPin size={12} className="text-primary shrink-0" />
-                  <span className="text-xs text-gray-500 truncate">{c.address}</span>
+                  <span className="text-xs text-muted-foreground truncate">{c.address}</span>
                 </div>
                 <div className="flex items-center gap-1.5 mb-1">
-                  <Phone size={12} className="text-gray-400 shrink-0" />
-                  <span className="text-xs text-gray-400">{c.phone}</span>
+                  <Phone size={12} className="text-muted-foreground shrink-0" />
+                  <span className="text-xs text-muted-foreground">{c.phone}</span>
                 </div>
                 {c.hours ? (
                   <div className="flex items-center gap-1.5 mb-3">
-                    <Clock size={12} className="text-gray-400 shrink-0" />
-                    <span className="text-xs text-gray-400">{c.hours}</span>
+                    <Clock size={12} className="text-muted-foreground shrink-0" />
+                    <span className="text-xs text-muted-foreground">{c.hours}</span>
                   </div>
                 ) : <div className="mb-2" />}
                 <div className="flex items-center gap-2">

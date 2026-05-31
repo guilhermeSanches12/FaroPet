@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Camera, PawPrint } from "lucide-react";
+import { useState, useRef } from "react";
+import { Camera } from "lucide-react";
 import { useApp } from "@/hooks/useApp";
 import { Input, Select, Btn } from "@/components/shared";
 import { BackHeader } from "@/components/layout/BackHeader";
@@ -21,8 +21,30 @@ export function PetForm() {
     notes: editing?.notes ?? "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [photo, setPhoto] = useState<string>(editing?.photo ?? "");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const set = (k: keyof typeof form) => (v: string) => setForm(f => ({ ...f, [k]: v }));
+
+  const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 500;
+        const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+        setPhoto(canvas.toDataURL("image/jpeg", 0.8));
+      };
+      img.src = ev.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
 
   const submit = () => {
     const errs: Record<string, string> = {};
@@ -35,6 +57,7 @@ export function PetForm() {
       gender: form.gender, birthDate: form.birthDate,
       weight: form.weight ? Number(form.weight) : undefined,
       conditions: form.conditions || undefined, notes: form.notes || undefined,
+      photo: photo || undefined,
     };
     if (editing) updatePet({ ...editing, ...pet });
     else addPet(pet);
@@ -46,9 +69,25 @@ export function PetForm() {
       <BackHeader title={editing ? "Editar pet" : "Novo pet"} onBack={() => navigate("pets")} />
       <div className="px-5 pb-10 flex flex-col gap-4">
         <div className="flex justify-center py-4">
-          <div className="w-24 h-24 rounded-2xl bg-orange-100 border-2 border-dashed border-primary/40 flex flex-col items-center justify-center gap-1 cursor-pointer">
-            <Camera size={24} className="text-primary" />
-            <span className="text-xs text-primary font-medium">Foto</span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handlePhoto}
+          />
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="w-24 h-24 rounded-2xl bg-orange-100 border-2 border-dashed border-primary/40 flex flex-col items-center justify-center gap-1 cursor-pointer overflow-hidden"
+          >
+            {photo ? (
+              <img src={photo} alt="Foto do pet" className="w-full h-full object-cover" />
+            ) : (
+              <>
+                <Camera size={24} className="text-primary" />
+                <span className="text-xs text-primary font-medium">Foto</span>
+              </>
+            )}
           </div>
         </div>
 

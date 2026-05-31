@@ -11,7 +11,7 @@ const NAV_ITEMS = [
 ] as const;
 
 function NavIcon({ icon, active }: { icon: string; active: boolean }) {
-  const cls = `transition-colors ${active ? "text-white" : "text-gray-500"}`;
+  const cls = `transition-colors ${active ? "text-primary-foreground" : "text-muted-foreground"}`;
   if (icon === "home") return <Home size={22} className={cls} strokeWidth={active ? 2.5 : 2} />;
   if (icon === "paw") return <PawPrint size={22} className={cls} strokeWidth={active ? 2.5 : 2} />;
   if (icon === "syringe") return <Syringe size={22} className={cls} strokeWidth={active ? 2.5 : 2} />;
@@ -38,7 +38,7 @@ export function BottomNav() {
   const unread = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#1E1812] border-t border-gray-100 dark:border-[#3D2E22] shadow-lg">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-lg">
       <nav className="flex items-stretch h-16">
         {NAV_ITEMS.map(item => {
           const active =
@@ -48,16 +48,16 @@ export function BottomNav() {
             <button
               key={item.id}
               onClick={() => navigate(item.id as Page)}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 relative transition-colors ${active ? "bg-primary/5 dark:bg-primary/10" : ""}`}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 relative transition-colors ${active ? "bg-primary/5" : ""}`}
             >
               <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${active ? "bg-primary" : "bg-transparent"}`}>
                 <NavIcon icon={item.icon} active={active} />
               </div>
-              <span className={`text-[10px] font-medium leading-none ${active ? "text-primary" : "text-gray-400 dark:text-gray-500"}`}>
+              <span className={`text-[10px] font-medium leading-none ${active ? "text-primary" : "text-muted-foreground"}`}>
                 {item.label}
               </span>
               {item.id === "settings" && unread > 0 && (
-                <span className="absolute top-2 right-4 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-[#1E1812]" />
+                <span className="absolute top-2 right-4 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-card" />
               )}
             </button>
           );

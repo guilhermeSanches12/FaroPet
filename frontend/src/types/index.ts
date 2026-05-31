@@ -46,14 +46,15 @@ export interface Appointment {
   id: string; petId: string; date: string; time: string;
   reason: string; location: string; vet?: string;
   hasMedication: boolean; medicationDetails?: string;
-  observations?: string; status: AppointmentStatus;
+  observations?: string; diagnosis?: string; prescription?: string;
+  status: AppointmentStatus;
 }
 
 export interface Medication {
   id: string; petId: string; name: string; dosage?: string;
   frequency: string; durationDays: number; startDate: string;
   endDate: string; fasting: boolean; type: MedType;
-  reason: string; observations?: string;
+  reason: string; observations?: string; prescribedBy?: string;
   doses: { date: string; time: string; status: "taken" | "skipped" | "pending" }[];
 }
 
@@ -65,6 +66,7 @@ export interface AppNotification {
 
 export interface AdoptionPost {
   id: string;
+  userId?: string;
   animalName?: string;
   animalType: string;
   breed?: string;
@@ -95,11 +97,12 @@ export interface Clinic {
 export interface AppContextType {
   page: Page; navigate: (p: Page, data?: any) => void; navData: any;
   user: AppUser | null; isLoggedIn: boolean;
-  login: (email: string, pw: string) => boolean;
+  login: (email: string, pw: string) => Promise<boolean>;
   logout: () => void;
-  register: (data: Partial<AppUser> & { password: string }) => void;
+  register: (data: Partial<AppUser> & { password: string }) => Promise<void>;
   pets: Pet[]; addPet: (p: Omit<Pet, "id">) => void;
   updatePet: (p: Pet) => void; deletePet: (id: string) => void;
+  loadPetData: (petId: string) => Promise<void>;
   vaccines: Vaccine[]; addVaccine: (v: Omit<Vaccine, "id">) => void;
   updateVaccine: (v: Vaccine) => void; deleteVaccine: (id: string) => void;
   appointments: Appointment[]; addAppointment: (a: Omit<Appointment, "id">) => void;
@@ -109,6 +112,7 @@ export interface AppContextType {
   notifications: AppNotification[]; markRead: (id: string) => void;
   markAllRead: () => void; deleteNotification: (id: string) => void;
   adoption: AdoptionPost[]; addAdoption: (a: Omit<AdoptionPost, "id">) => void;
+  updateAdoption: (a: AdoptionPost) => void; deleteAdoption: (id: string) => void;
   clinics: Clinic[];
   toast: { msg: string; type: "success" | "error" | "info" } | null;
   showToast: (msg: string, type?: "success" | "error" | "info") => void;

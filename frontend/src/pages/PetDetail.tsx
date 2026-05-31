@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, Edit2, Trash2, Syringe, Calendar, Pill, PawPrint, Weight, Venus, Mars, Cake } from "lucide-react";
 import { useApp } from "@/hooks/useApp";
 import { Card, Badge, Btn } from "@/components/shared";
 import { BottomNav } from "@/components/layout/BottomNav";
-import { calcAge, fmtDate, fmtDateParts, PET_TYPE_LABELS, STATUS_LABELS, STATUS_COLORS, petTypeInitial, petTypeBg } from "@/utils/helpers";
+import { calcAge, fmtDate, fmtDateParts, PET_TYPE_LABELS, STATUS_LABELS, STATUS_COLORS, petTypeInitial, petTypeBg, getDoseLabel } from "@/utils/helpers";
 import type { Pet, PetType } from "@/types";
 
 function PetHeroAvatar({ type, photo, name }: { type: PetType; photo?: string; name: string }) {
@@ -30,9 +30,14 @@ function InfoChip({ icon: Icon, label, value }: { icon: React.ElementType; label
 }
 
 export function PetDetail() {
-  const { navData, navigate, deletePet, vaccines, appointments, medications } = useApp();
+  const { navData, navigate, deletePet, loadPetData, vaccines, appointments, medications } = useApp();
   const pet = navData as Pet;
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  useEffect(() => {
+    if (pet?.id) loadPetData(pet.id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pet?.id]);
 
   if (!pet) { navigate("pets"); return null; }
 
@@ -46,14 +51,11 @@ export function PetDetail() {
   return (
     <div className="flex flex-col bg-[#FFF8F0] dark:bg-[#1E1812] min-h-screen pb-24 md:pb-6">
 
-      {/* ── Mobile hero / Desktop header ───────────────────────────────── */}
-      <div className="relative">
-        {/* Photo area */}
-        <div className="w-full h-72 md:h-96 overflow-hidden bg-orange-100 dark:bg-[#2A2018] relative">
+      {/* ── Mobile hero (full-width banner) ── hidden on lg ─────────────── */}
+      <div className="relative lg:hidden">
+        <div className="w-full h-72 overflow-hidden bg-orange-100 dark:bg-[#2A2018] relative">
           <PetHeroAvatar type={pet.type} photo={pet.photo} name={pet.name} />
-          {/* Gradient overlay at bottom */}
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
-          {/* Pet name on photo */}
           <div className="absolute bottom-5 left-5 right-16">
             <p className="text-white/80 text-xs font-semibold uppercase tracking-widest mb-1">
               {PET_TYPE_LABELS[pet.type]}
@@ -62,38 +64,57 @@ export function PetDetail() {
             <p className="text-white/70 text-sm mt-0.5">{pet.breed}</p>
           </div>
         </div>
-
-        {/* Back button */}
         <button
           onClick={() => navigate("pets")}
           className="absolute top-12 left-5 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/40 transition-colors"
         >
           <ChevronLeft size={22} className="text-white" />
         </button>
-
-        {/* Action buttons */}
         <div className="absolute top-12 right-5 flex gap-2">
-          <button
-            onClick={() => navigate("pet-form", pet)}
-            className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/40 transition-colors"
-          >
+          <button onClick={() => navigate("pet-form", pet)} className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/40 transition-colors">
             <Edit2 size={16} className="text-white" />
           </button>
-          <button
-            onClick={() => setConfirmDelete(true)}
-            className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-red-500/70 transition-colors"
-          >
+          <button onClick={() => setConfirmDelete(true)} className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-red-500/70 transition-colors">
             <Trash2 size={16} className="text-white" />
           </button>
         </div>
+      </div>
+
+      {/* ── Desktop back button ── shown only on lg ──────────────────────── */}
+      <div className="hidden lg:flex items-center gap-3 max-w-5xl mx-auto w-full px-4 pt-6 pb-2">
+        <button
+          onClick={() => navigate("pets")}
+          className="flex items-center gap-1.5 text-sm font-semibold text-gray-500 hover:text-primary transition-colors"
+        >
+          <ChevronLeft size={18} /> Voltar
+        </button>
       </div>
 
       {/* ── Content area ─────────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto w-full px-4 py-5">
         <div className="flex flex-col lg:flex-row gap-6">
 
-          {/* ── Left: profile info ─────────────────────────────────────── */}
+          {/* ── Left: photo (desktop only) + profile info ──────────────── */}
           <div className="lg:w-72 shrink-0 flex flex-col gap-4">
+
+            {/* Desktop portrait photo card */}
+            <div className="hidden lg:block relative rounded-3xl overflow-hidden bg-orange-100 dark:bg-[#2A2018] aspect-[3/4] shadow-md">
+              <PetHeroAvatar type={pet.type} photo={pet.photo} name={pet.name} />
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/70 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4">
+                <p className="text-white/70 text-[10px] font-bold uppercase tracking-widest mb-0.5">{PET_TYPE_LABELS[pet.type]}</p>
+                <h1 className="text-white text-2xl font-black leading-tight drop-shadow-sm">{pet.name}</h1>
+                <p className="text-white/60 text-xs mt-0.5">{pet.breed}</p>
+              </div>
+              <div className="absolute top-3 right-3 flex gap-2">
+                <button onClick={() => navigate("pet-form", pet)} className="w-9 h-9 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/50 transition-colors">
+                  <Edit2 size={14} className="text-white" />
+                </button>
+                <button onClick={() => setConfirmDelete(true)} className="w-9 h-9 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-red-500/70 transition-colors">
+                  <Trash2 size={14} className="text-white" />
+                </button>
+              </div>
+            </div>
 
             {/* Stats chips */}
             <div className="grid grid-cols-3 gap-2">
@@ -131,8 +152,8 @@ export function PetDetail() {
               </Card>
             )}
 
-            {/* Edit button */}
-            <Btn variant="primary" full onClick={() => navigate("pet-form", pet)}>
+            {/* Edit button — mobile only (desktop has buttons on photo) */}
+            <Btn variant="primary" full className="lg:hidden" onClick={() => navigate("pet-form", pet)}>
               <Edit2 size={15} /> Editar perfil
             </Btn>
           </div>
@@ -168,7 +189,7 @@ export function PetDetail() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">{v.name}</p>
-                        {v.dose && <p className="text-xs text-gray-400 dark:text-gray-500">Dose {v.dose}</p>}
+                        {v.dose && <p className="text-xs text-gray-400 dark:text-gray-500">{getDoseLabel(v.name, pet.type, v.dose)}</p>}
                       </div>
                       <Badge label={STATUS_LABELS[v.status]} className={STATUS_COLORS[v.status]} />
                     </Card>

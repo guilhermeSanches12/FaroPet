@@ -32,11 +32,9 @@ function AdoptionCard({ animal, onView }: { animal: AdoptionPost; onView: () => 
   return (
     <div
       onClick={onView}
-      className="bg-white rounded-2xl border border-gray-100 overflow-hidden cursor-pointer transition-shadow duration-200 hover:shadow-lg"
-      style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
+      className="bg-card text-card-foreground rounded-2xl border border-border overflow-hidden cursor-pointer transition-shadow duration-200 hover:shadow-lg shadow-sm"
     >
-      {/* Photo */}
-      <div className="w-full overflow-hidden bg-gray-100" style={{ height: 176 }}>
+      <div className="w-full h-44 overflow-hidden bg-muted">
         {animal.photos?.[0] || animal.photo ? (
           <img
             src={animal.photos?.[0] || animal.photo}
@@ -45,75 +43,72 @@ function AdoptionCard({ animal, onView }: { animal: AdoptionPost; onView: () => 
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center" style={{ background: "#FFF7ED" }}>
+          <div className="w-full h-full flex items-center justify-center bg-accent">
             <img src="/img/pawIcon.png" alt="" className="w-10 h-10 object-contain opacity-35" aria-hidden="true" />
           </div>
         )}
       </div>
 
-      {/* Content */}
-      <div style={{ padding: 14 }}>
-        {/* Name row */}
+      <div className="p-3.5">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <p className="font-bold text-gray-900 truncate" style={{ fontSize: 15 }}>{name}</p>
-            <p className="text-gray-400 mt-0.5" style={{ fontSize: 12 }}>{speciesLabel}{breedLine}</p>
+            <div className="flex items-center gap-2 mb-0.5">
+              <p className="font-bold text-foreground text-[15px] truncate">{name}</p>
+              {animal.status !== "available" && (
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${animal.status === "in_process" ? "bg-yellow-100 text-yellow-700" : "bg-gray-200 text-gray-500"}`}>
+                  {animal.status === "in_process" ? "Em processo" : "Adotado"}
+                </span>
+              )}
+            </div>
+            <p className="text-muted-foreground text-xs">{speciesLabel}{breedLine}</p>
           </div>
           {phone && (
             <a
               href={`tel:${phone.replace(/\D/g, "")}`}
               onClick={e => e.stopPropagation()}
               title={phone}
-              className="shrink-0 flex items-center justify-center rounded-full"
-              style={{ width: 32, height: 32, background: "#F97316" }}
+              className="shrink-0 flex items-center justify-center rounded-full w-8 h-8 bg-primary"
             >
               <Phone size={14} className="text-white" />
             </a>
           )}
         </div>
 
-        {/* Chips */}
         {(animal.age || animal.gender || animal.size) && (
           <div className="flex flex-wrap gap-1 mt-2">
             {animal.age && (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "#FFF7ED", color: "#EA580C" }}>
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-orange-50 text-orange-600">
                 {animal.age}
               </span>
             )}
             {animal.gender && (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "#FEF3C7", color: "#7C3505" }}>
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">
                 {animal.gender}
               </span>
             )}
             {animal.size && (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "#F3F4F6", color: "#374151" }}>
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
                 {animal.size}
               </span>
             )}
           </div>
         )}
 
-        {/* Location */}
         {(animal.city || animal.state) && (
-          <p className="flex items-center gap-1 mt-1.5 text-gray-400" style={{ fontSize: 11 }}>
-            <MapPin size={11} className="shrink-0" style={{ color: "#F97316" }} />
+          <p className="flex items-center gap-1 mt-1.5 text-muted-foreground text-[11px]">
+            <MapPin size={11} className="shrink-0 text-primary" />
             {[animal.city, animal.state].filter(Boolean).join(" – ")}
           </p>
         )}
 
-        {/* Description */}
         {animal.description && (
-          <p
-            className="text-gray-500 mt-2 leading-relaxed overflow-hidden"
-            style={{ fontSize: 12, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" } as React.CSSProperties}
-          >
+          <p className="text-muted-foreground text-xs mt-2 leading-relaxed line-clamp-2">
             {animal.description}
           </p>
         )}
 
-        {/* Footer */}
-        <div className="mt-3 pt-2.5 border-t border-gray-50">
-          <span className="font-semibold" style={{ fontSize: 12, color: "#F97316" }}>Ver detalhes →</span>
+        <div className="mt-3 pt-2.5 border-t border-border">
+          <span className="font-semibold text-primary text-xs">Ver detalhes →</span>
         </div>
       </div>
     </div>
@@ -139,11 +134,10 @@ export function Adoption() {
   const hasFilter = speciesFilter || stateFilter || cityFilter;
 
   return (
-    <div className="bg-[#F4F4F0] dark:bg-[#1E1812] min-h-screen">
-      {/* Header */}
-      <div className="px-4 sm:px-5 lg:px-8 pt-6 pb-2">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Adoção</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Animais esperando um lar</p>
+    <div className="bg-background min-h-screen pb-20 md:pb-6">
+      <div className="bg-card border-b border-border px-4 sm:px-5 lg:px-8 pt-10 pb-4 md:pt-8">
+        <h1 className="text-2xl font-bold text-foreground">Adoção</h1>
+        <p className="text-sm text-muted-foreground mt-0.5">Animais esperando um lar</p>
       </div>
 
       <main className="px-4 sm:px-5 lg:px-8 py-5 pb-28 lg:pb-10 max-w-5xl">
@@ -152,11 +146,11 @@ export function Adoption() {
         <div className="flex flex-wrap gap-2 mb-5 items-end">
           {/* Species */}
           <div className="flex-1" style={{ minWidth: 120 }}>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Espécie</label>
+            <label className="block text-xs font-semibold text-muted-foreground mb-1">Espécie</label>
             <select
               value={speciesFilter}
               onChange={e => setSpeciesFilter(e.target.value)}
-              className="w-full border border-gray-200 dark:border-[#4A3828] rounded-xl px-3 py-2.5 text-sm bg-white dark:bg-[#332820] dark:text-gray-200 focus:outline-none focus:border-[#F97316]"
+              className="w-full border border-border rounded-xl px-3 py-2.5 text-sm bg-input-background text-foreground focus:outline-none focus:border-primary"
             >
               {SPECIES_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
@@ -164,11 +158,11 @@ export function Adoption() {
 
           {/* State */}
           <div className="flex-1" style={{ minWidth: 140 }}>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Estado</label>
+            <label className="block text-xs font-semibold text-muted-foreground mb-1">Estado</label>
             <select
               value={stateFilter}
               onChange={e => setStateFilter(e.target.value)}
-              className="w-full border border-gray-200 dark:border-[#4A3828] rounded-xl px-3 py-2.5 text-sm bg-white dark:bg-[#332820] dark:text-gray-200 focus:outline-none focus:border-[#F97316]"
+              className="w-full border border-border rounded-xl px-3 py-2.5 text-sm bg-input-background text-foreground focus:outline-none focus:border-primary"
             >
               <option value="">Todos os estados</option>
               {BR_STATES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -177,13 +171,13 @@ export function Adoption() {
 
           {/* City */}
           <div className="flex-1" style={{ minWidth: 120 }}>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Cidade</label>
+            <label className="block text-xs font-semibold text-muted-foreground mb-1">Cidade</label>
             <input
               type="text"
               value={cityFilter}
               onChange={e => setCityFilter(e.target.value)}
               placeholder="Buscar cidade..."
-              className="w-full border border-gray-200 dark:border-[#4A3828] rounded-xl px-3 py-2.5 text-sm bg-white dark:bg-[#332820] dark:text-gray-200 focus:outline-none focus:border-[#F97316] transition-colors"
+              className="w-full border border-border rounded-xl px-3 py-2.5 text-sm bg-input-background text-foreground focus:outline-none focus:border-primary transition-colors"
             />
           </div>
 
@@ -200,7 +194,7 @@ export function Adoption() {
 
         {/* Result count */}
         {filtered.length > 0 && (
-          <p className="text-xs text-gray-400 mb-4">
+          <p className="text-xs text-muted-foreground mb-4">
             {filtered.length} {filtered.length === 1 ? "animal encontrado" : "animais encontrados"}
           </p>
         )}
@@ -208,11 +202,11 @@ export function Adoption() {
         {/* Grid or empty state */}
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-4" style={{ background: "#FFF7ED" }}>
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-4 bg-accent">
               <img src="/img/pawIcon.png" alt="" className="w-10 h-10 object-contain opacity-50" />
             </div>
-            <p className="text-base font-bold text-gray-700 dark:text-gray-300 mb-1">Nenhum animal encontrado</p>
-            <p className="text-sm text-gray-400 mb-5">
+            <p className="text-base font-bold text-foreground mb-1">Nenhum animal encontrado</p>
+            <p className="text-sm text-muted-foreground mb-5">
               {hasFilter
                 ? "Tente outros filtros ou publique um animal para adoção."
                 : "Seja o primeiro a publicar um animal para adoção na sua região."}

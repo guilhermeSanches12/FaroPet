@@ -1,5 +1,5 @@
 import { Calendar } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "@/hooks/useApp";
 import { Card, Badge } from "@/components/shared";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -11,8 +11,13 @@ type AgendaItem = {
 };
 
 export function Agenda() {
-  const { vaccines, appointments, medications, pets } = useApp();
+  const { vaccines, appointments, medications, pets, loadPetData } = useApp();
   const [view, setView] = useState<"today" | "week" | "all">("today");
+
+  useEffect(() => {
+    pets.forEach(p => loadPetData(p.id));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pets.length]);
 
   const todayStr = new Date().toISOString().split("T")[0];
 
@@ -45,10 +50,10 @@ export function Agenda() {
   });
 
   return (
-    <div className="flex flex-col bg-[#FFF8F0] min-h-screen pb-20 md:pb-6">
-      <div className="bg-white border-b border-gray-100 px-5 pt-10 pb-4 md:pt-8">
+    <div className="flex flex-col bg-background min-h-screen pb-20 md:pb-6">
+      <div className="bg-card border-b border-border px-5 pt-10 pb-4 md:pt-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="font-bold text-2xl text-gray-900">Agenda</h1>
+          <h1 className="font-bold text-2xl text-foreground">Agenda</h1>
         </div>
       </div>
 
@@ -58,7 +63,7 @@ export function Agenda() {
             <button
               key={t.id}
               onClick={() => setView(t.id as typeof view)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${view === t.id ? "bg-primary text-white" : "bg-gray-100 text-gray-600"}`}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${view === t.id ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}
             >
               {t.label}
             </button>
@@ -68,9 +73,9 @@ export function Agenda() {
         <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
           {filtered.length === 0 ? (
             <div className="col-span-2 flex flex-col items-center justify-center py-16 gap-3 text-center">
-              <Calendar size={40} className="text-gray-200" />
-              <p className="text-gray-500 font-medium">Nenhum evento para este período.</p>
-              <p className="text-sm text-gray-400">Agende vacinas ou consultas para vê-las aqui.</p>
+              <Calendar size={40} className="text-muted-foreground/40" />
+              <p className="text-foreground font-medium">Nenhum evento para este período.</p>
+              <p className="text-sm text-muted-foreground">Agende vacinas ou consultas para vê-las aqui.</p>
             </div>
           ) : (
             filtered.map(item => {
@@ -87,8 +92,8 @@ export function Agenda() {
                     <span className="inline-block text-[9px] px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 font-bold uppercase tracking-wide mb-1 border border-orange-100">
                       {item.type}
                     </span>
-                    <p className="font-semibold text-gray-800 text-sm truncate">{item.title}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="font-semibold text-foreground text-sm truncate">{item.title}</p>
+                    <p className="text-xs text-muted-foreground">
                       {item.petName}{item.time ? ` · ${item.time}` : ""}
                     </p>
                   </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Calendar, MapPin, Edit2 } from "lucide-react";
 import { useApp } from "@/hooks/useApp";
 import { Card, Badge, Btn } from "@/components/shared";
@@ -6,18 +6,23 @@ import { BottomNav } from "@/components/layout/BottomNav";
 import { fmtDateParts, APT_STATUS_LABELS, APT_STATUS_COLORS } from "@/utils/helpers";
 
 export function Appointments() {
-  const { appointments, pets, navigate } = useApp();
+  const { appointments, pets, navigate, loadPetData } = useApp();
   const [tab, setTab] = useState<"scheduled" | "history">("scheduled");
+
+  useEffect(() => {
+    pets.forEach(p => loadPetData(p.id));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pets.length]);
 
   const filtered = appointments.filter(a =>
     tab === "scheduled" ? a.status === "scheduled" : a.status !== "scheduled"
   );
 
   return (
-    <div className="flex flex-col bg-[#FFF8F0] min-h-screen pb-20 md:pb-6">
-      <div className="bg-white border-b border-gray-100 px-5 pt-10 pb-4 md:pt-8">
+    <div className="flex flex-col bg-background min-h-screen pb-20 md:pb-6">
+      <div className="bg-card border-b border-border px-5 pt-10 pb-4 md:pt-8">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="font-bold text-2xl text-gray-900">Consultas</h1>
+          <h1 className="font-bold text-2xl text-foreground">Consultas</h1>
           <button onClick={() => navigate("appointment-form")} className="flex items-center gap-2 bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">
             <Plus size={16} /> Agendar
           </button>
@@ -30,7 +35,7 @@ export function Appointments() {
           <button
             key={t.id}
             onClick={() => setTab(t.id as typeof tab)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${tab === t.id ? "bg-primary text-white" : "bg-gray-100 text-gray-600"}`}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${tab === t.id ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}
           >
             {t.label}
           </button>
@@ -40,8 +45,8 @@ export function Appointments() {
       <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
         {filtered.length === 0 ? (
           <div className="col-span-2 flex flex-col items-center justify-center py-16 gap-3 text-center">
-            <Calendar size={40} className="text-gray-200" />
-            <p className="text-gray-500 font-medium">Nenhuma consulta encontrada.</p>
+            <Calendar size={40} className="text-muted-foreground/40" />
+            <p className="text-foreground font-medium">Nenhuma consulta encontrada.</p>
             <Btn variant="primary" size="sm" onClick={() => navigate("appointment-form")}>Agendar consulta</Btn>
           </div>
         ) : (
@@ -65,13 +70,13 @@ export function Appointments() {
                       </span>
                       <Badge label={APT_STATUS_LABELS[a.status]} className={APT_STATUS_COLORS[a.status]} />
                     </div>
-                    <h3 className="font-semibold text-gray-800 truncate">{a.reason}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">{pet?.name} · às {a.time}</p>
+                    <h3 className="font-semibold text-foreground truncate">{a.reason}</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">{pet?.name} · às {a.time}</p>
                     <div className="flex items-center gap-1 mt-1">
-                      <MapPin size={11} className="text-gray-400 shrink-0" />
-                      <span className="text-xs text-gray-400 truncate">{a.location}</span>
+                      <MapPin size={11} className="text-muted-foreground shrink-0" />
+                      <span className="text-xs text-muted-foreground truncate">{a.location}</span>
                     </div>
-                    {a.vet && <p className="text-xs text-gray-400 mt-0.5">{a.vet}</p>}
+                    {a.vet && <p className="text-xs text-muted-foreground mt-0.5">{a.vet}</p>}
                   </div>
                 </div>
                 <button onClick={() => navigate("appointment-form", a)} className="mt-3 text-xs text-primary font-medium flex items-center gap-1">

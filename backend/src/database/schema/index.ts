@@ -5,3 +5,5 @@ export * from './medications.schema';
 export * from './appointments.schema';
 export * from './reminders.schema';
 export * from './health-histories.schema';
+export * from './push-subscriptions.schema';
+export * from './adoptions.schema';

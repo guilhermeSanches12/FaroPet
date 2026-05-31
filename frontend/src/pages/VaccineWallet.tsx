@@ -1,15 +1,20 @@
 import { Plus, Syringe, Edit2, Info } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "@/hooks/useApp";
 import { Card, Badge } from "@/components/shared";
 import { BottomNav } from "@/components/layout/BottomNav";
-import { fmtDate, STATUS_LABELS, STATUS_COLORS } from "@/utils/helpers";
+import { fmtDate, STATUS_LABELS, STATUS_COLORS, getDoseLabel } from "@/utils/helpers";
 import type { VaccineStatus } from "@/types";
 
 export function VaccineWallet() {
-  const { vaccines, pets, navigate } = useApp();
+  const { vaccines, pets, navigate, loadPetData } = useApp();
   const [selectedPet, setSelectedPet] = useState<string>("all");
   const [filter, setFilter] = useState<VaccineStatus | "all">("all");
+
+  useEffect(() => {
+    pets.forEach(p => loadPetData(p.id));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pets.length]);
 
   const filtered = vaccines.filter(v => {
     if (selectedPet !== "all" && v.petId !== selectedPet) return false;
@@ -18,12 +23,12 @@ export function VaccineWallet() {
   });
 
   return (
-    <div className="flex flex-col bg-[#FFF8F0] min-h-screen pb-20 md:pb-6">
-      <div className="bg-white border-b border-gray-100 px-5 pt-10 pb-4 md:pt-8">
+    <div className="flex flex-col bg-background min-h-screen pb-20 md:pb-6">
+      <div className="bg-card border-b border-border px-5 pt-10 pb-4 md:pt-8">
         <div className="max-w-4xl mx-auto flex items-start justify-between">
           <div>
-            <h1 className="font-bold text-2xl text-gray-900">Carteira de Vacinas</h1>
-            <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+            <h1 className="font-bold text-2xl text-foreground">Carteira de Vacinas</h1>
+            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
               <Info size={12} /> Informativo — confirme com seu veterinário.
             </p>
           </div>
@@ -40,7 +45,7 @@ export function VaccineWallet() {
           <button
             key={"id" in p ? p.id : p}
             onClick={() => setSelectedPet("id" in p ? p.id : p)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedPet === ("id" in p ? p.id : p) ? "bg-primary text-white" : "bg-gray-100 text-gray-600"}`}
+            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedPet === ("id" in p ? p.id : p) ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}
           >
             {"name" in p ? p.name : "Todos"}
           </button>
@@ -55,7 +60,7 @@ export function VaccineWallet() {
             <button
               key={s}
               onClick={() => setFilter(s)}
-              className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-all ${filter === s ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-600"}`}
+              className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-all ${filter === s ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}
             >
               {labels[s]}
             </button>
@@ -66,9 +71,9 @@ export function VaccineWallet() {
       <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
         {filtered.length === 0 ? (
           <div className="col-span-2 flex flex-col items-center justify-center py-16 gap-3 text-center">
-            <Syringe size={40} className="text-gray-200" />
-            <p className="text-gray-500 font-medium">Nenhuma vacina encontrada.</p>
-            <p className="text-sm text-gray-400">Registre as vacinas do seu pet para acompanhar o histórico.</p>
+            <Syringe size={40} className="text-muted-foreground/40" />
+            <p className="text-foreground font-medium">Nenhuma vacina encontrada.</p>
+            <p className="text-sm text-muted-foreground">Registre as vacinas do seu pet para acompanhar o histórico.</p>
           </div>
         ) : (
           filtered.map(v => {
@@ -78,12 +83,12 @@ export function VaccineWallet() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1">
                     <span className="inline-block text-[9px] px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 font-bold uppercase tracking-wide mb-1.5">
-                      Vacina{v.dose ? ` · Dose ${v.dose}` : ""}
+                      {pet ? `Vacina${getDoseLabel(v.name, pet.type, v.dose) ? ` · ${getDoseLabel(v.name, pet.type, v.dose)}` : ""}` : `Vacina${v.dose ? ` · Dose ${v.dose}` : ""}`}
                     </span>
-                    <h3 className="font-semibold text-gray-800">{v.name}</h3>
-                    <p className="text-xs text-gray-400 mt-0.5">{pet?.name} · {v.recommendedAge}</p>
-                    {v.dateTaken && <p className="text-xs text-gray-400">Tomada: {fmtDate(v.dateTaken)}</p>}
-                    {v.scheduledDate && <p className="text-xs text-gray-400">Agendada: {fmtDate(v.scheduledDate)}</p>}
+                    <h3 className="font-semibold text-foreground">{v.name}</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">{pet?.name} · {v.recommendedAge}</p>
+                    {v.dateTaken && <p className="text-xs text-muted-foreground">Tomada: {fmtDate(v.dateTaken)}</p>}
+                    {v.scheduledDate && <p className="text-xs text-muted-foreground">Agendada: {fmtDate(v.scheduledDate)}</p>}
                     {v.nextDose && <p className="text-xs text-blue-500">Próxima dose: {fmtDate(v.nextDose)}</p>}
                   </div>
                   <Badge label={STATUS_LABELS[v.status]} className={STATUS_COLORS[v.status]} />

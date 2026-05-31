@@ -3,9 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, isNull, inArray } from 'drizzle-orm';
 import { DRIZZLE } from '../../database/drizzle.token';
-import { reminders } from '../../database/schema';
+import { reminders, pets } from '../../database/schema';
 import { PetsService } from '../pets/pets.service';
 import { CreateReminderDto, UpdateReminderDto } from './reminders.dto';
 
@@ -84,5 +84,37 @@ export class RemindersService {
       .returning();
 
     return updated;
+  }
+
+  async markRead(id: string, userId: string) {
+    const existing = await this.findOne(id, userId);
+
+    const [updated] = await this.db
+      .update(reminders)
+      .set({ isRead: true, updatedAt: new Date() })
+      .where(and(eq(reminders.id, id), eq(reminders.petId, existing.petId)))
+      .returning();
+
+    return updated;
+  }
+
+  async findAllByUser(userId: string) {
+    // Busca todos os pets do usuário
+    const userPets = await this.db.query.pets.findMany({
+      where: and(eq(pets.userId, userId), isNull(pets.deletedAt)),
+    });
+
+    if (userPets.length === 0) return [];
+
+    const petIds = userPets.map((p: any) => p.id);
+
+    return this.db.query.reminders.findMany({
+      where: and(
+        inArray(reminders.petId, petIds),
+        eq(reminders.isDismissed, false),
+        isNull(reminders.deletedAt),
+      ),
+      orderBy: (r: any, { desc }: any) => [desc(r.remindAt)],
+    });
   }
 }

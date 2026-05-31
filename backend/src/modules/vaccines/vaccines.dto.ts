@@ -19,6 +19,10 @@ export class CreateVaccineDto {
 
   @IsOptional()
   @IsString()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
   @MaxLength(100)
   manufacturer?: string;
 
@@ -65,6 +69,10 @@ export class CreateVaccineDto {
 }
 
 export class UpdateVaccineDto {
+  @IsOptional()
+  @IsString()
+  status?: string;
+
   @IsOptional()
   @IsString()
   @MaxLength(150)

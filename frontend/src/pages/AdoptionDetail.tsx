@@ -1,6 +1,7 @@
-import { ChevronLeft, MapPin, Phone, User, Syringe, ClipboardList, MessageCircle } from "lucide-react";
+import { ChevronLeft, MapPin, Phone, User, Syringe, ClipboardList, MessageCircle, Pencil, CheckCircle } from "lucide-react";
 import { useApp } from "@/hooks/useApp";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { adoptionsApi } from "@/services/api";
 import type { AdoptionPost } from "@/types";
 
 const ANIMAL_TYPE_LABELS: Record<string, string> = {
@@ -26,8 +27,23 @@ function InfoBlock({ title, text, icon: Icon }: { title: string; text: string; i
   );
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  available: "Disponível",
+  in_process: "Em processo",
+  adopted: "Adotado",
+};
+const STATUS_NEXT: Record<string, string> = {
+  available: "in_process",
+  in_process: "adopted",
+};
+const STATUS_COLORS: Record<string, string> = {
+  available: "bg-green-100 text-green-700",
+  in_process: "bg-yellow-100 text-yellow-700",
+  adopted: "bg-gray-200 text-gray-500",
+};
+
 export function AdoptionDetail() {
-  const { navigate, navData } = useApp();
+  const { navigate, navData, user, showToast, adoption, updateAdoption } = useApp();
   const animal = navData as AdoptionPost | null;
 
   if (!animal) {
@@ -35,21 +51,35 @@ export function AdoptionDetail() {
     return null;
   }
 
-  const speciesLabel = ANIMAL_TYPE_LABELS[animal.animalType] ?? "Animal";
-  const name = animal.animalName || speciesLabel;
-  const phone = animal.contactPhone || animal.contact;
-  const whatsapp = animal.contactWhatsapp;
+  // Keep in sync with adoption state (in case status was updated)
+  const current = adoption.find(a => a.id === current.id) ?? animal;
+  const isOwner = !!user && user.id === current.userId;
+
+  const handleStatusChange = async () => {
+    const next = STATUS_NEXT[current.status];
+    if (!next) return;
+    try {
+      await adoptionsApi.updateStatus(current.id, next);
+      updateAdoption({ ...current, status: next as AdoptionPost["status"] });
+      showToast("Status atualizado!");
+    } catch { showToast("Erro ao atualizar status", "error"); }
+  };
+
+  const speciesLabel = ANIMAL_TYPE_LABELS[current.animalType] ?? "Animal";
+  const name = current.animalName || speciesLabel;
+  const phone = current.contactPhone || current.contact;
+  const whatsapp = current.contactWhatsapp;
   const phoneRaw = (whatsapp || phone || "").replace(/\D/g, "");
-  const locationStr = [animal.city, animal.state].filter(Boolean).join(", ");
+  const locationStr = [current.city, current.state].filter(Boolean).join(", ");
 
   return (
     <div className="bg-[#F4F4F0] dark:bg-[#1E1812] min-h-screen pb-28 lg:pb-10">
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <div className="relative w-full" style={{ height: 260, background: "linear-gradient(145deg,#A3510F,#7C3505)" }}>
-        {(animal.photos?.[0] || animal.photo) && (
+        {(current.photos?.[0] || current.photo) && (
           <img
-            src={animal.photos?.[0] || animal.photo}
+            src={current.photos?.[0] || current.photo}
             alt={name}
             className="w-full h-full object-cover absolute inset-0"
           />
@@ -82,7 +112,7 @@ export function AdoptionDetail() {
         <div className="absolute bottom-4 left-5 right-5">
           <h1 className="text-2xl font-bold text-white leading-tight">{name}</h1>
           <p className="text-sm text-white/80 mt-0.5">
-            {speciesLabel}{animal.breed ? ` · ${animal.breed}` : ""}
+            {speciesLabel}{current.breed ? ` · ${current.breed}` : ""}
           </p>
         </div>
       </div>
@@ -92,24 +122,49 @@ export function AdoptionDetail() {
 
         {/* Chips */}
         <div className="flex flex-wrap gap-2 mb-5">
-          {animal.age && (
+          {current.age && (
             <span className="text-xs font-semibold px-3 py-1.5 rounded-full" style={{ background: "#FFF7ED", color: "#EA580C" }}>
-              {animal.age}
+              {current.age}
             </span>
           )}
-          {animal.gender && (
+          {current.gender && (
             <span className="text-xs font-semibold px-3 py-1.5 rounded-full" style={{ background: "#FEF3C7", color: "#7C3505" }}>
-              {animal.gender}
+              {current.gender}
             </span>
           )}
-          {animal.size && (
+          {current.size && (
             <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-700">
-              {animal.size}
+              {current.size}
             </span>
           )}
           <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-100 text-amber-800">
             {speciesLabel}
           </span>
+        </div>
+
+        {/* Status badge + owner actions */}
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
+          <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${STATUS_COLORS[current.status] ?? "bg-gray-100 text-gray-500"}`}>
+            {STATUS_LABELS[current.status] ?? current.status}
+          </span>
+          {isOwner && (
+            <>
+              <button
+                onClick={() => navigate("adoption-form", current)}
+                className="flex items-center gap-1.5 text-xs font-semibold text-orange-600 border border-orange-200 bg-orange-50 px-3 py-1.5 rounded-full hover:bg-orange-100 transition-colors"
+              >
+                <Pencil size={12} /> Editar
+              </button>
+              {STATUS_NEXT[current.status] && (
+                <button
+                  onClick={handleStatusChange}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-green-700 border border-green-200 bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100 transition-colors"
+                >
+                  <CheckCircle size={12} /> Marcar como "{STATUS_LABELS[STATUS_NEXT[current.status]]}"
+                </button>
+              )}
+            </>
+          )}
         </div>
 
         {/* Location */}
@@ -125,21 +180,21 @@ export function AdoptionDetail() {
 
           {/* Left column */}
           <div className="space-y-4">
-            {animal.description && (
-              <InfoBlock title="Sobre" text={animal.description} />
+            {current.description && (
+              <InfoBlock title="Sobre" text={current.description} />
             )}
-            {animal.healthInfo && (
-              <InfoBlock title="Saúde" text={animal.healthInfo} icon={ClipboardList} />
+            {current.healthInfo && (
+              <InfoBlock title="Saúde" text={current.healthInfo} icon={ClipboardList} />
             )}
-            {animal.vaccinationInfo && (
-              <InfoBlock title="Vacinação" text={animal.vaccinationInfo} icon={Syringe} />
+            {current.vaccinationInfo && (
+              <InfoBlock title="Vacinação" text={current.vaccinationInfo} icon={Syringe} />
             )}
           </div>
 
           {/* Right column */}
           <div className="space-y-4">
-            {animal.requirements && (
-              <InfoBlock title="Requisitos para adoção" text={animal.requirements} icon={ClipboardList} />
+            {current.requirements && (
+              <InfoBlock title="Requisitos para adoção" text={current.requirements} icon={ClipboardList} />
             )}
 
             {/* Contact card */}
@@ -150,7 +205,7 @@ export function AdoptionDetail() {
                   <User size={20} style={{ color: "#F97316" }} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{animal.contactName}</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{current.contactName}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{phone}</p>
                 </div>
               </div>
@@ -180,8 +235,8 @@ export function AdoptionDetail() {
               </div>
             </div>
 
-            {animal.observations && (
-              <InfoBlock title="Observações" text={animal.observations} />
+            {current.observations && (
+              <InfoBlock title="Observações" text={current.observations} />
             )}
           </div>
         </div>

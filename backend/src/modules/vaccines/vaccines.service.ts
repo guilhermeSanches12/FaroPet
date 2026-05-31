@@ -1,6 +1,7 @@
 import {
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { and, eq, isNull } from 'drizzle-orm';
@@ -14,6 +15,8 @@ type VaccineStatus = 'taken' | 'scheduled' | 'overdue' | 'pending';
 
 @Injectable()
 export class VaccinesService {
+  private readonly logger = new Logger(VaccinesService.name);
+
   constructor(
     @Inject(DRIZZLE) private readonly db: DrizzleDb,
     private readonly petsService: PetsService,
@@ -39,6 +42,7 @@ export class VaccinesService {
   }
 
   async create(userId: string, dto: CreateVaccineDto) {
+    this.logger.log({ msg: 'create vaccine', dto });
     await this.petsService.verifyOwnership(dto.petId, userId);
 
     const [vaccine] = await this.db
@@ -50,6 +54,7 @@ export class VaccinesService {
   }
 
   async update(id: string, userId: string, dto: UpdateVaccineDto) {
+    this.logger.log({ msg: 'update vaccine', id, dto });
     const existing = await this.findOne(id, userId);
 
     const [updated] = await this.db

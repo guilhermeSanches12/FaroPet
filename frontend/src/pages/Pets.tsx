@@ -20,10 +20,10 @@ export function Pets() {
   const { pets, navigate } = useApp();
 
   return (
-    <div className="flex flex-col bg-[#FFF8F0] min-h-screen pb-20 md:pb-6">
-      <div className="bg-white border-b border-gray-100 px-5 pt-10 pb-4 md:pt-8">
+    <div className="flex flex-col bg-background min-h-screen pb-20 md:pb-6">
+      <div className="bg-card border-b border-border px-5 pt-10 pb-4 md:pt-8">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="font-bold text-2xl text-gray-900">Meus Pets</h1>
+          <h1 className="font-bold text-2xl text-foreground">Meus Pets</h1>
           {pets.length < 3 && (
             <button
               onClick={() => navigate("pet-form")}
@@ -43,8 +43,8 @@ export function Pets() {
               <PawPrint size={40} className="text-primary" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-700 text-lg">Nenhum pet cadastrado</h2>
-              <p className="text-gray-400 text-sm mt-1 max-w-xs">
+              <h2 className="font-bold text-foreground text-lg">Nenhum pet cadastrado</h2>
+              <p className="text-muted-foreground text-sm mt-1 max-w-xs">
                 Adicione seu primeiro pet para começar a gerenciar a saúde dele.
               </p>
             </div>
@@ -59,11 +59,11 @@ export function Pets() {
                     <PetAvatar type={p.type} photo={p.photo} name={p.name} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-gray-800">{p.name}</h3>
-                    <p className="text-sm text-gray-500">{PET_TYPE_LABELS[p.type]} · {p.breed}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{calcAge(p.birthDate)} · {p.gender === "male" ? "Macho" : "Fêmea"}</p>
+                    <h3 className="font-bold text-foreground">{p.name}</h3>
+                    <p className="text-sm text-muted-foreground">{PET_TYPE_LABELS[p.type]} · {p.breed}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{calcAge(p.birthDate)} · {p.gender === "male" ? "Macho" : "Fêmea"}</p>
                   </div>
-                  <ChevronRight size={18} className="text-gray-300 group-hover:text-primary transition-colors" />
+                  <ChevronRight size={18} className="text-muted-foreground group-hover:text-primary transition-colors" />
                 </Card>
               </button>
             ))}
