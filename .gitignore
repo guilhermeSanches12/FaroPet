@@ -1,4 +1,9 @@
 node_modules/
 dist/
+.vite/
 .DS_Store
 *.local
+
+# Backend
+backend/.env
+backend/pet_health_db.sql

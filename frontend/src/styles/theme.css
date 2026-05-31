@@ -1,0 +1,300 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #FFF8F0;
+  --foreground: #1A1A1A;
+  --card: #ffffff;
+  --card-foreground: #1A1A1A;
+  --popover: #ffffff;
+  --popover-foreground: #1A1A1A;
+  --primary: #FF8000;
+  --primary-foreground: #ffffff;
+  --secondary: #83401E;
+  --secondary-foreground: #ffffff;
+  --muted: #F4EDE4;
+  --muted-foreground: #9C7A5A;
+  --accent: #FFF0DC;
+  --accent-foreground: #6C3703;
+  --destructive: #C34823;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #F8F4F0;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+/* ── Faro dark mode ─────────────────────────────────────────────────────── */
+/* Warm dark palette — keeps the brand orange intact                         */
+.dark {
+  color-scheme: dark;
+  --background: #1E1812;
+  --foreground: #FFFFFF;
+  --card: #2A2018;
+  --card-foreground: #FFFFFF;
+  --popover: #2A2018;
+  --popover-foreground: #FFFFFF;
+  --primary: #FF8000;
+  --primary-foreground: #ffffff;
+  --secondary: #3D2E22;
+  --secondary-foreground: #FFFFFF;
+  --muted: #332820;
+  --muted-foreground: #C4B8A8;
+  --accent: #3D2E22;
+  --accent-foreground: #FF8000;
+  --destructive: #C34823;
+  --destructive-foreground: #ffffff;
+  --border: #3D2E22;
+  --input: transparent;
+  --input-background: #332820;
+  --switch-background: #4A3828;
+  --sidebar: #241C14;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #FF8000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #3D2E22;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #3D2E22;
+  --sidebar-ring: #FF8000;
+}
+
+@theme inline {
+  --color-brand-orange: #FF8000;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* ── Global dark mode overrides (utilities layer — wins over color utils) ─ */
+  /* Covers hardcoded Tailwind colors used across pages & shared components   */
+
+  /* Page backgrounds */
+  .dark .bg-\[\#FFF8F0\] { background-color: #1E1812; }
+  .dark .bg-\[\#F4F4F0\] { background-color: #1E1812; }
+  .dark .bg-\[\#f8f9fa\] { background-color: #1A1510; }
+  .dark .bg-\[\#a6632f\] { background-color: #7A4A22; }
+  .dark .bg-\[\#241C14\] { background-color: #241C14; }
+  .dark .bg-\[\#2A2018\] { background-color: #2A2018; }
+  .dark .bg-\[\#332820\] { background-color: #332820; }
+
+  /* Surface / card backgrounds */
+  .dark .bg-white { background-color: #2A2018; }
+  .dark .bg-gray-50 { background-color: #241C14; }
+  .dark .bg-gray-100 { background-color: #332820; }
+  .dark .bg-gray-200 { background-color: #3D2E22; }
+
+  /* Orange surfaces */
+  .dark .bg-orange-50 { background-color: #3D2E22; }
+  .dark .bg-orange-100 { background-color: #4A3828; }
+  .dark .hover\:bg-orange-50:hover { background-color: #4A3828; }
+  .dark .active\:bg-orange-50:active { background-color: #4A3828; }
+
+  /* Borders */
+  .dark .border-gray-100 { border-color: #3D2E22; }
+  .dark .border-gray-200 { border-color: #4A3828; }
+  .dark .border-gray-300 { border-color: #4A3828; }
+  .dark .border-orange-100 { border-color: #5A4530; }
+  .dark .border-orange-200 { border-color: #6A5038; }
+  .dark .border-orange-300 { border-color: #7A5A40; }
+  .dark .border-\[\#3D2E22\] { border-color: #3D2E22; }
+  .dark .border-\[\#4A3828\] { border-color: #4A3828; }
+  .dark .hover\:border-orange-300:hover { border-color: #FF8000; }
+  .dark .hover\:border-primary:hover { border-color: #FF8000; }
+
+  /* Text — primary content (white) */
+  .dark .text-gray-900 { color: #FFFFFF; }
+  .dark .text-gray-800 { color: #FFFFFF; }
+  .dark .text-gray-700 { color: #F5F5F5; }
+  .dark .text-gray-600 { color: #E0E0E0; }
+  .dark .text-gray-500 { color: #C4B8A8; }
+  .dark .text-gray-400 { color: #A89C8C; }
+  .dark .text-gray-300 { color: #908478; }
+  .dark .text-gray-200 { color: #6A6058; }
+
+  /* Text — explicit dark: utilities (pages with dark: prefixes) */
+  .dark .dark\:text-gray-100 { color: #FFFFFF; }
+  .dark .dark\:text-gray-200 { color: #FFFFFF; }
+  .dark .dark\:text-gray-300 { color: #F0F0F0; }
+  .dark .dark\:text-gray-400 { color: #C4B8A8; }
+  .dark .dark\:text-gray-500 { color: #A89C8C; }
+  .dark .dark\:text-gray-600 { color: #C4B8A8; }
+
+  /* Orange text — keep brand, readable on dark */
+  .dark .text-orange-700 { color: #FFB366; }
+  .dark .text-orange-600 { color: #FFAA55; }
+  .dark .text-orange-500 { color: #FF9933; }
+  .dark .text-orange-400 { color: #FFAA55; }
+  .dark .text-orange-800 { color: #FFD699; }
+  .dark .dark\:text-orange-400 { color: #FFAA55; }
+
+  /* Hover text */
+  .dark .hover\:text-gray-600:hover { color: #FFFFFF; }
+  .dark .hover\:text-primary:hover { color: #FF9933; }
+
+  /* Dividers & separators */
+  .dark .divide-gray-100 > * + * { border-color: #3D2E22; }
+  .dark .bg-gray-200.h-px,
+  .dark .h-px.bg-gray-200 { background-color: #3D2E22; }
+
+  /* Inputs / textareas / selects */
+  .dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  .dark textarea,
+  .dark select {
+    background-color: #332820;
+    border-color: #4A3828;
+    color: #FFFFFF;
+  }
+  .dark input::placeholder,
+  .dark textarea::placeholder { color: #908478; }
+
+  /* Ghost / outline buttons */
+  .dark .active\:bg-gray-200:active { background-color: #4A3828; }
+
+  /* Purple / green / blue / amber accents */
+  .dark .bg-purple-50 { background-color: #3D2E22; }
+  .dark .bg-purple-100 { background-color: #4A3828; }
+  .dark .border-purple-100 { border-color: #5A4530; }
+  .dark .text-purple-700 { color: #C4B5FD; }
+  .dark .text-purple-600 { color: #A78BFA; }
+  .dark .text-purple-500 { color: #A78BFA; }
+  .dark .text-purple-400 { color: #C4B5FD; }
+  .dark .hover\:bg-purple-200:hover { background-color: #5A4530; }
+
+  .dark .bg-green-50 { background-color: #2A3328; }
+  .dark .bg-green-100 { background-color: #334030; }
+  .dark .text-green-600 { color: #86EFAC; }
+  .dark .text-green-700 { color: #86EFAC; }
+
+  .dark .bg-blue-50 { background-color: #2A2838; }
+  .dark .text-blue-500 { color: #93C5FD; }
+  .dark .text-blue-700 { color: #93C5FD; }
+
+  .dark .bg-amber-50 { background-color: #3D3520; }
+  .dark .text-amber-600 { color: #FCD34D; }
+  .dark .text-amber-700 { color: #FCD34D; }
+
+  .dark .bg-amber-50.text-amber-700,
+  .dark .bg-blue-50.text-blue-700,
+  .dark .bg-green-50.text-green-700,
+  .dark .bg-purple-50.text-purple-700 { color: inherit; }
+
+  /* Status badges */
+  .dark .border-green-200 { border-color: #3D5040; }
+  .dark .border-blue-200 { border-color: #3D4550; }
+  .dark .border-red-200 { border-color: #503D3D; }
+
+  .dark .border-gray-50 { border-color: #3D2E22; }
+
+  /* Quick-action tiles (home) */
+  .dark .bg-amber-50.text-amber-700 { background-color: #3D3520; color: #FCD34D; }
+  .dark .bg-blue-50.text-blue-700 { background-color: #2A2838; color: #93C5FD; }
+  .dark .bg-purple-50.text-purple-700 { background-color: #3D2E22; color: #C4B5FD; }
+  .dark .bg-green-50.text-green-700 { background-color: #2A3328; color: #86EFAC; }
+
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+}

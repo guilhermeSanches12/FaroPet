@@ -30,6 +30,29 @@
 
 ---
 
+## Estrutura do projeto
+
+```text
+FaroPet/
+├── frontend/   # Aplicacao web React + Vite
+├── backend/    # API NestJS
+├── docs/       # Documentacao do projeto
+└── package.json
+```
+
+Comandos principais a partir da raiz:
+
+```bash
+npm run dev:frontend
+npm run build:frontend
+npm run dev:backend
+npm run build:backend
+```
+
+Tambem e possivel entrar em `frontend/` ou `backend/` e usar os scripts npm de cada projeto diretamente.
+
+---
+
 ## 🐾 Sobre o Faro Pet
 
 O **Faro Pet** é uma aplicação web progressiva criada para centralizar os principais cuidados de saúde dos animais de estimação.
