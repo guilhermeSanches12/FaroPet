@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/iconWebLogo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medicamentos - Faro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { brand: { orange: '#F97316', 'orange-dark': '#EA580C', brown: '#451a03', 'brown-mid': '#7C3505', beige: '#FEF3C7', light: '#F4F4F0' } },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+          },
+        },
+      };
+    </script>
+    <style>
+      select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+    </style>
+  </head>
+  <body class="bg-brand-light font-sans text-gray-900 min-h-screen">
+
+    <div id="desktop-sidebar"></div>
+
+    <div class="lg:ml-64">
+      <div class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+        <div class="flex items-center px-4 lg:px-8 py-4">
+          <a href="dashboard.html" class="lg:hidden w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mr-3" aria-label="Voltar">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </a>
+          <div class="flex-1">
+            <h1 class="text-lg lg:text-2xl font-bold text-gray-900">Medicamentos</h1>
+            <p class="text-xs text-gray-400 hidden lg:block">Lembretes de medicamentos dos seus pets</p>
+          </div>
+          <a href="add-medicine.html" class="flex items-center gap-2 px-3 lg:px-4 py-2 rounded-xl text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity" style="background:#F97316;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            <span class="hidden sm:inline">Novo medicamento</span>
+          </a>
+        </div>
+      </div>
+
+      <main class="px-4 sm:px-5 lg:px-8 py-5 pb-28 lg:pb-10 max-w-4xl">
+
+        <!-- Filter by pet -->
+        <div class="mb-5">
+          <select id="filter-pet" onchange="filterMeds()"
+            class="border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white text-gray-700 focus:outline-none focus:border-orange-400 w-full sm:w-64">
+            <option value="">Todos os pets</option>
+          </select>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-5 overflow-x-auto pb-1" role="tablist">
+          <button class="tab-btn flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all active-tab" data-filter="active" onclick="setTab(this,'active')" role="tab">Ativos</button>
+          <button class="tab-btn flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all inactive-tab" data-filter="all" onclick="setTab(this,'all')" role="tab">Todos</button>
+          <button class="tab-btn flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all inactive-tab" data-filter="finished" onclick="setTab(this,'finished')" role="tab">Concluídos</button>
+        </div>
+
+        <div id="med-list" class="space-y-3"></div>
+
+        <div id="med-empty" class="hidden bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+          <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style="background:#FFF7ED;">
+            <svg class="w-7 h-7" style="color:#F97316;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+          </div>
+          <p class="text-base font-bold text-gray-700 mb-1">Nenhum medicamento</p>
+          <p class="text-sm text-gray-400 mb-5">Adicione um lembrete de medicamento para seu pet.</p>
+          <a href="add-medicine.html" class="inline-block px-6 py-3 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity" style="background:#F97316;">Adicionar medicamento</a>
+        </div>
+
+      </main>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="shared.js"></script>
+    <script>
+      var currentTab = 'active';
+      var allMeds    = [];
+      var today      = '';
+
+      function setTab(btn, filter) {
+        currentTab = filter;
+        document.querySelectorAll('.tab-btn').forEach(function(b) {
+          b.classList.remove('active-tab');
+          b.classList.add('inactive-tab');
+        });
+        btn.classList.add('active-tab');
+        btn.classList.remove('inactive-tab');
+        render();
+      }
+
+      function filterMeds() { render(); }
+
+      function deleteMed(id) {
+        if (!confirm('Remover este medicamento?')) return;
+        saveFaroMedicines(getFaroMedicines().filter(function(m){ return m.id !== id; }));
+        allMeds = getFaroMedicines();
+        render();
+      }
+
+      function buildMedCard(m) {
+        var isActive = !m.endDate || m.endDate >= today;
+        var badgeBg  = isActive ? '#DCFCE7' : '#F3F4F6';
+        var badgeColor = isActive ? '#16A34A' : '#6B7280';
+        var badgeLabel = isActive ? 'Ativo' : 'Concluído';
+        return '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">' +
+          '<div class="flex items-start justify-between gap-3">' +
+            '<div class="flex items-center gap-3 flex-1 min-w-0">' +
+              '<div class="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center" style="background:#FFF7ED;">' +
+                '<svg class="w-5 h-5" style="color:#F97316;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>' +
+              '</div>' +
+              '<div class="min-w-0">' +
+                '<p class="font-semibold text-sm text-gray-900 truncate">' + escapeHtml(m.name) + '</p>' +
+                '<p class="text-xs text-gray-500 truncate">' + escapeHtml(m.petName || '') + '</p>' +
+              '</div>' +
+            '</div>' +
+            '<span class="flex-shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold" style="color:' + badgeColor + ';background:' + badgeBg + ';">' + badgeLabel + '</span>' +
+          '</div>' +
+          '<div class="mt-3 grid grid-cols-3 gap-3 text-xs">' +
+            '<div><p class="text-gray-400 font-medium">Dosagem</p><p class="text-gray-700 font-semibold">' + escapeHtml(m.dosage || '—') + '</p></div>' +
+            '<div><p class="text-gray-400 font-medium">Frequência</p><p class="text-gray-700 font-semibold">' + escapeHtml(m.frequency || '—') + '</p></div>' +
+            '<div><p class="text-gray-400 font-medium">Horário</p><p class="text-gray-700 font-semibold">' + escapeHtml(m.time || '—') + '</p></div>' +
+          '</div>' +
+          '<div class="mt-2 flex items-center justify-between">' +
+            '<p class="text-xs text-gray-400">' + formatDate(m.startDate) + (m.endDate ? ' até ' + formatDate(m.endDate) : '') + '</p>' +
+            '<button onclick="deleteMed(\'' + m.id + '\')" class="text-xs text-red-400 hover:text-red-600 font-medium transition-colors">Remover</button>' +
+          '</div>' +
+          (m.notes ? '<p class="mt-1.5 text-xs text-gray-400 italic">' + escapeHtml(m.notes) + '</p>' : '') +
+        '</div>';
+      }
+
+      function render() {
+        var filterPet = document.getElementById('filter-pet').value;
+        var meds = allMeds.filter(function(m) {
+          if (filterPet && m.petId !== filterPet) return false;
+          var isActive = !m.endDate || m.endDate >= today;
+          if (currentTab === 'active')   return isActive;
+          if (currentTab === 'finished') return !isActive;
+          return true;
+        });
+
+        var list  = document.getElementById('med-list');
+        var empty = document.getElementById('med-empty');
+        if (meds.length === 0) {
+          list.innerHTML = '';
+          empty.classList.remove('hidden');
+        } else {
+          empty.classList.add('hidden');
+          list.innerHTML = meds.map(buildMedCard).join('');
+        }
+      }
+
+      window.addEventListener('load', function() {
+        requireAuth();
+        renderDesktopSidebar('medicines');
+        renderBottomNav('menu');
+        today   = todayStr();
+        allMeds = getFaroMedicines();
+
+        var pets   = getFaroPets();
+        var petSel = document.getElementById('filter-pet');
+        pets.forEach(function(pet) {
+          var opt = document.createElement('option');
+          opt.value = pet.id; opt.textContent = pet.name;
+          petSel.appendChild(opt);
+        });
+
+        // Style tabs
+        document.querySelectorAll('.tab-btn').forEach(function(b) {
+          b.classList.add(b.classList.contains('active-tab') ? 'bg-orange-500' : 'bg-white');
+          b.classList.add(b.classList.contains('active-tab') ? 'text-white' : 'text-gray-500');
+          b.classList.add('border', 'border-gray-200');
+        });
+        document.querySelector('[data-filter="active"]').style.cssText = 'background:#F97316;color:#fff;border-color:#F97316;';
+
+        render();
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(function(b) {
+              b.style.cssText = 'background:#fff;color:#6B7280;border-color:#E5E7EB;';
+            });
+            btn.style.cssText = 'background:#F97316;color:#fff;border-color:#F97316;';
+          });
+        });
+      });
+    </script>
+    <style>
+      .tab-btn { border: 1px solid #E5E7EB; }
+      .active-tab { background: #F97316; color: #fff; border-color: #F97316; }
+      .inactive-tab { background: #fff; color: #6B7280; }
+    </style>
+  </body>
+</html>

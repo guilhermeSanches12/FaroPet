@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/iconWebLogo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Publicar para Adoção - Faro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { brand: { orange: '#F97316', 'orange-dark': '#EA580C', brown: '#451a03', 'brown-mid': '#7C3505', beige: '#FEF3C7', light: '#F4F4F0' } },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+          },
+        },
+      };
+    </script>
+    <style>
+      select, input, textarea { appearance: none; -webkit-appearance: none; }
+      select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+      .f { border: 1px solid #E5E7EB; border-radius: 0.75rem; padding: 0.875rem 0.75rem; font-size: 0.875rem; background: #F9FAFB; width: 100%; transition: border-color 0.15s; }
+      .f:focus { border-color: #F97316; outline: none; }
+    </style>
+  </head>
+  <body class="bg-brand-light font-sans text-gray-900 min-h-screen">
+
+    <div id="desktop-sidebar"></div>
+
+    <div class="lg:ml-64">
+      <div class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+        <div class="flex items-center px-4 lg:px-8 py-4">
+          <a href="adoption.html" class="lg:hidden w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mr-3" aria-label="Voltar">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </a>
+          <div class="flex-1">
+            <h1 class="text-lg lg:text-2xl font-bold text-gray-900">Publicar para Adoção</h1>
+            <p class="text-xs text-gray-400 hidden lg:block">Ajude um animal a encontrar um lar</p>
+          </div>
+        </div>
+      </div>
+
+      <main class="px-4 sm:px-5 lg:px-8 py-6 pb-28 lg:pb-10 max-w-2xl lg:max-w-3xl mx-auto lg:mx-0">
+        <form id="adoption-form" onsubmit="handleSubmit(event)" class="space-y-5">
+
+          <!-- Photo upload -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <h2 class="text-sm font-bold text-gray-900 mb-3">Fotos do animal</h2>
+            <div class="flex flex-wrap gap-3">
+              <div id="photo-preview-container" class="flex flex-wrap gap-3"></div>
+              <button type="button" onclick="document.getElementById('photo-input').click()"
+                class="w-20 h-20 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors"
+                style="border-color:#F97316;color:#F97316;">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                <span class="text-xs font-medium">Foto</span>
+              </button>
+            </div>
+            <input id="photo-input" type="file" accept="image/*" multiple class="hidden" onchange="handlePhotos(event)" />
+            <p class="text-xs text-gray-400 mt-2">Até 5 fotos. A primeira será usada como capa.</p>
+          </div>
+
+          <!-- Basic info -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
+            <h2 class="text-sm font-bold text-gray-900">Informações do animal</h2>
+
+            <div>
+              <label for="a-name" class="block text-xs font-semibold text-gray-600 mb-1.5">Nome *</label>
+              <input type="text" id="a-name" required placeholder="Nome do animal" class="f" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="a-species" class="block text-xs font-semibold text-gray-600 mb-1.5">Espécie *</label>
+                <select id="a-species" required onchange="updateBreeds()" class="f">
+                  <option value="" disabled selected>Selecione</option>
+                  <option value="Cachorro">Cachorro</option>
+                  <option value="Gato">Gato</option>
+                  <option value="Pássaro">Pássaro</option>
+                  <option value="Coelho">Coelho</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+              <div>
+                <label for="a-gender" class="block text-xs font-semibold text-gray-600 mb-1.5">Gênero *</label>
+                <select id="a-gender" required class="f">
+                  <option value="" disabled selected>Selecione</option>
+                  <option value="Macho">Macho</option>
+                  <option value="Fêmea">Fêmea</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="a-breed" class="block text-xs font-semibold text-gray-600 mb-1.5">Raça</label>
+              <select id="a-breed" class="f">
+                <option value="" disabled selected>Selecione a espécie primeiro</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="a-age" class="block text-xs font-semibold text-gray-600 mb-1.5">Idade</label>
+                <input type="text" id="a-age" placeholder="Ex: 2 anos" class="f" />
+              </div>
+              <div>
+                <label for="a-size" class="block text-xs font-semibold text-gray-600 mb-1.5">Porte</label>
+                <select id="a-size" class="f">
+                  <option value="" disabled selected>Selecione</option>
+                  <option value="Pequeno">Pequeno</option>
+                  <option value="Médio">Médio</option>
+                  <option value="Grande">Grande</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="a-desc" class="block text-xs font-semibold text-gray-600 mb-1.5">Descrição *</label>
+              <textarea id="a-desc" required rows="4" placeholder="Conte sobre a personalidade, comportamento e história do animal..." class="f resize-none"></textarea>
+            </div>
+          </div>
+
+          <!-- Health & vaccination -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
+            <h2 class="text-sm font-bold text-gray-900">Saúde e vacinação</h2>
+
+            <div>
+              <label for="a-health" class="block text-xs font-semibold text-gray-600 mb-1.5">Informações de saúde</label>
+              <textarea id="a-health" rows="3" placeholder="Condições de saúde, se é castrado(a), tratamentos em andamento..." class="f resize-none"></textarea>
+            </div>
+
+            <div>
+              <label for="a-vacc" class="block text-xs font-semibold text-gray-600 mb-1.5">Vacinação</label>
+              <textarea id="a-vacc" rows="2" placeholder="Vacinas aplicadas, carteirinha, etc..." class="f resize-none"></textarea>
+            </div>
+
+            <div>
+              <label for="a-req" class="block text-xs font-semibold text-gray-600 mb-1.5">Requisitos para adoção <span class="font-normal text-gray-400">(opcional)</span></label>
+              <textarea id="a-req" rows="2" placeholder="Lar com espaço, não ter outras pets, etc..." class="f resize-none"></textarea>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
+            <h2 class="text-sm font-bold text-gray-900">Localização</h2>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="a-city" class="block text-xs font-semibold text-gray-600 mb-1.5">Cidade *</label>
+                <input type="text" id="a-city" required placeholder="Sua cidade" class="f" />
+              </div>
+              <div>
+                <label for="a-state" class="block text-xs font-semibold text-gray-600 mb-1.5">Estado *</label>
+                <select id="a-state" required class="f">
+                  <option value="" disabled selected>Selecione</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
+            <h2 class="text-sm font-bold text-gray-900">Contato</h2>
+
+            <div>
+              <label for="a-contact-name" class="block text-xs font-semibold text-gray-600 mb-1.5">Seu nome *</label>
+              <input type="text" id="a-contact-name" required placeholder="Nome do responsável" class="f" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="a-phone" class="block text-xs font-semibold text-gray-600 mb-1.5">Telefone</label>
+                <input type="tel" id="a-phone" placeholder="(11) 9 9999-9999" class="f" />
+              </div>
+              <div>
+                <label for="a-whatsapp" class="block text-xs font-semibold text-gray-600 mb-1.5">WhatsApp</label>
+                <input type="tel" id="a-whatsapp" placeholder="(11) 9 9999-9999" class="f" />
+              </div>
+            </div>
+
+            <div>
+              <label for="a-obs" class="block text-xs font-semibold text-gray-600 mb-1.5">Observações finais <span class="font-normal text-gray-400">(opcional)</span></label>
+              <textarea id="a-obs" rows="2" placeholder="Qualquer informação adicional..." class="f resize-none"></textarea>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-col-reverse sm:flex-row gap-3">
+            <a href="adoption.html" class="flex-1 py-3.5 text-center rounded-xl text-sm font-semibold border border-gray-200 text-gray-600 bg-white hover:bg-gray-50">
+              Cancelar
+            </a>
+            <button type="submit" class="flex-1 py-3.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity" style="background:#F97316;">
+              Publicar para adoção
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="shared.js"></script>
+    <script>
+      var BREEDS = {
+        Cachorro: ['SRD (Sem raça definida)', 'Labrador Retriever', 'Golden Retriever', 'Poodle', 'Shih Tzu', 'Bulldog', 'Pastor Alemão', 'Rottweiler', 'Yorkshire Terrier', 'Beagle', 'Outro'],
+        Gato:     ['SRD (Sem raça definida)', 'Gato Persa', 'Gato Siamês', 'Maine Coon', 'Ragdoll', 'British Shorthair', 'Outro'],
+        Pássaro:  ['SRD (Sem raça definida)', 'Calopsita', 'Periquito', 'Canário', 'Papagaio', 'Outro'],
+        Coelho:   ['SRD (Sem raça definida)', 'Angorá', 'Holland Lop', 'Outro'],
+        Outro:    ['SRD (Sem raça definida)', 'Outro'],
+      };
+
+      var currentPhotos = [];
+
+      function updateBreeds() {
+        var species = document.getElementById('a-species').value;
+        var sel = document.getElementById('a-breed');
+        sel.innerHTML = '<option value="">SRD (Sem raça definida)</option>';
+        (BREEDS[species] || ['SRD (Sem raça definida)', 'Outro']).forEach(function(b) {
+          if (b === 'SRD (Sem raça definida)') return;
+          var opt = document.createElement('option');
+          opt.value = b; opt.textContent = b;
+          sel.appendChild(opt);
+        });
+      }
+
+      function handlePhotos(e) {
+        var files = Array.from(e.target.files);
+        var remaining = 5 - currentPhotos.length;
+        if (remaining <= 0) return;
+        files.slice(0, remaining).forEach(function(file) {
+          var reader = new FileReader();
+          reader.onload = function(ev) {
+            var img = new Image();
+            img.onload = function() {
+              var canvas = document.createElement('canvas');
+              var MAX = 800;
+              var w = img.width, h = img.height;
+              if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+              if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
+              canvas.width = w; canvas.height = h;
+              canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+              var url = canvas.toDataURL('image/jpeg', 0.8);
+              currentPhotos.push(url);
+              renderPreviews();
+            };
+            img.src = ev.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+        e.target.value = '';
+      }
+
+      function renderPreviews() {
+        var container = document.getElementById('photo-preview-container');
+        container.innerHTML = currentPhotos.map(function(url, i) {
+          return '<div class="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200">' +
+            '<img src="' + escapeHtml(url) + '" class="w-full h-full object-cover" />' +
+            '<button type="button" onclick="removePhoto(' + i + ')" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">' +
+              '<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>' +
+            '</button>' +
+            (i === 0 ? '<span class="absolute bottom-1 left-1 text-xs font-bold text-white bg-black bg-opacity-50 px-1 rounded">Capa</span>' : '') +
+          '</div>';
+        }).join('');
+      }
+
+      function removePhoto(idx) {
+        currentPhotos.splice(idx, 1);
+        renderPreviews();
+      }
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        var user = getFaroUser();
+        var adoption = {
+          id:              Date.now().toString(),
+          name:            document.getElementById('a-name').value.trim(),
+          species:         document.getElementById('a-species').value,
+          breed:           document.getElementById('a-breed').value,
+          gender:          document.getElementById('a-gender').value,
+          age:             document.getElementById('a-age').value.trim(),
+          size:            document.getElementById('a-size').value,
+          description:     document.getElementById('a-desc').value.trim(),
+          healthInfo:      document.getElementById('a-health').value.trim(),
+          vaccinationInfo: document.getElementById('a-vacc').value.trim(),
+          requirements:    document.getElementById('a-req').value.trim(),
+          city:            document.getElementById('a-city').value.trim(),
+          state:           document.getElementById('a-state').value,
+          contactName:     document.getElementById('a-contact-name').value.trim(),
+          contactPhone:    document.getElementById('a-phone').value.trim(),
+          contactWhatsapp: document.getElementById('a-whatsapp').value.trim(),
+          observations:    document.getElementById('a-obs').value.trim(),
+          photos:          currentPhotos,
+          publishedBy:     user ? user.name : '',
+          publishedAt:     todayStr(),
+        };
+
+        var adoptions = JSON.parse(localStorage.getItem('faro_adoptions') || '[]');
+        adoptions.push(adoption);
+        saveFaroAdoptions(adoptions);
+        window.location.href = 'adoption.html';
+      }
+
+      window.addEventListener('load', function() {
+        requireAuth();
+        renderDesktopSidebar('adoption');
+        renderBottomNav('adoption');
+
+        // Populate states
+        var stateSel = document.getElementById('a-state');
+        stateSel.innerHTML += buildStateOptions('');
+
+        // Pre-fill contact name from user
+        var user = getFaroUser();
+        if (user && user.name) {
+          document.getElementById('a-contact-name').value = user.name;
+        }
+        if (user && user.phone) {
+          document.getElementById('a-phone').value = user.phone;
+          document.getElementById('a-whatsapp').value = user.phone;
+        }
+      });
+    </script>
+  </body>
+</html>

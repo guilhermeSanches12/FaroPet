@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/iconWebLogo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consultas - Faro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { brand: { orange: '#F97316', 'orange-dark': '#EA580C', brown: '#451a03', 'brown-mid': '#7C3505', beige: '#FEF3C7', light: '#F4F4F0' } },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+          },
+        },
+      };
+    </script>
+    <style>
+      select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+      .tab-btn { border: 1px solid #E5E7EB; background: #fff; color: #6B7280; }
+    </style>
+  </head>
+  <body class="bg-brand-light font-sans text-gray-900 min-h-screen">
+
+    <div id="desktop-sidebar"></div>
+
+    <div class="lg:ml-64">
+      <div class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+        <div class="flex items-center px-4 lg:px-8 py-4">
+          <a href="dashboard.html" class="lg:hidden w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mr-3" aria-label="Voltar">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </a>
+          <div class="flex-1">
+            <h1 class="text-lg lg:text-2xl font-bold text-gray-900">Consultas</h1>
+            <p class="text-xs text-gray-400 hidden lg:block">Histórico e agenda de consultas veterinárias</p>
+          </div>
+          <a href="add-appointment.html" class="flex items-center gap-2 px-3 lg:px-4 py-2 rounded-xl text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity" style="background:#F97316;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            <span class="hidden sm:inline">Nova consulta</span>
+          </a>
+        </div>
+      </div>
+
+      <main class="px-4 sm:px-5 lg:px-8 py-5 pb-28 lg:pb-10 max-w-4xl">
+
+        <!-- Filters -->
+        <div class="flex flex-col sm:flex-row gap-3 mb-5">
+          <select id="pet-select" onchange="render()"
+            class="sm:w-56 border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-orange-400">
+            <option value="">Todos os pets</option>
+          </select>
+          <div class="flex gap-2">
+            <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold transition-all" data-filter="all" onclick="setFilter('all',this)">Todas</button>
+            <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold transition-all" data-filter="upcoming" onclick="setFilter('upcoming',this)">Próximas</button>
+            <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold transition-all" data-filter="past" onclick="setFilter('past',this)">Passadas</button>
+          </div>
+        </div>
+
+        <div id="appt-list" class="space-y-3"></div>
+
+        <div id="appt-empty" class="hidden text-center py-12 px-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
+          <svg class="w-12 h-12 mx-auto mb-3 text-gray-200" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+          </svg>
+          <p class="text-sm font-semibold text-gray-500 mb-1">Nenhuma consulta encontrada</p>
+          <a href="add-appointment.html" class="inline-block mt-3 text-sm font-bold text-white px-5 py-2.5 rounded-xl hover:opacity-90" style="background:#F97316;">Agendar consulta</a>
+        </div>
+
+      </main>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="shared.js"></script>
+    <script>
+      var allAppts     = [];
+      var currentFilter = 'upcoming';
+      var todayVal     = '';
+
+      function setFilter(filter, btn) {
+        currentFilter = filter;
+        document.querySelectorAll('.tab-btn').forEach(function(t) {
+          t.style.cssText = 'background:#fff;color:#6B7280;border-color:#E5E7EB;';
+        });
+        btn.style.cssText = 'background:#F97316;color:#fff;border-color:#F97316;';
+        render();
+      }
+
+      function deleteAppt(petId, apptId) {
+        if (!confirm('Remover esta consulta?')) return;
+        var pets = getFaroPets();
+        var idx  = pets.findIndex(function(p){ return p.id === petId; });
+        if (idx !== -1) {
+          pets[idx].appointments = (pets[idx].appointments || []).filter(function(a){ return a.id !== apptId; });
+          saveFaroPets(pets);
+        }
+        allAppts = allAppts.filter(function(a){ return a.id !== apptId; });
+        render();
+      }
+
+      function render() {
+        var petId    = document.getElementById('pet-select').value;
+        var filtered = allAppts.filter(function(a) {
+          if (petId && a.petId !== petId) return false;
+          if (currentFilter === 'upcoming') return (a.date || '') >= todayVal;
+          if (currentFilter === 'past')     return (a.date || '') < todayVal;
+          return true;
+        });
+        filtered.sort(function(a, b) { return (a.date || '') < (b.date || '') ? (currentFilter === 'past' ? 1 : -1) : (currentFilter === 'past' ? -1 : 1); });
+
+        var list  = document.getElementById('appt-list');
+        var empty = document.getElementById('appt-empty');
+        if (filtered.length === 0) { empty.classList.remove('hidden'); list.innerHTML = ''; return; }
+        empty.classList.add('hidden');
+
+        list.innerHTML = filtered.map(function(a) {
+          var isPast = (a.date || '') < todayVal;
+          var color  = isPast ? '#9CA3AF' : '#F97316';
+          var bg     = isPast ? '#F3F4F6' : '#FFF7ED';
+          return '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">' +
+            '<div class="flex items-center gap-3">' +
+              '<div class="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center" style="background:' + bg + ';">' +
+                '<svg class="w-5 h-5" style="color:' + color + ';" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>' +
+              '</div>' +
+              '<div class="flex-1 min-w-0">' +
+                '<p class="font-semibold text-sm text-gray-900 truncate">' + escapeHtml(a.title) + '</p>' +
+                '<p class="text-xs text-gray-400 truncate">' + escapeHtml(a.petName || '') + (a.location ? ' · ' + escapeHtml(a.location) : '') + '</p>' +
+                '<p class="text-xs font-medium mt-0.5" style="color:' + color + ';">' + formatDate(a.date) + (a.time ? ' às ' + escapeHtml(a.time) : '') + '</p>' +
+              '</div>' +
+              '<button onclick="deleteAppt(\'' + escapeHtml(a.petId) + '\',\'' + escapeHtml(a.id) + '\')" class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-gray-100 hover:bg-red-100 transition-colors" aria-label="Remover">' +
+                '<svg class="w-4 h-4 text-gray-400 hover:text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>' +
+              '</button>' +
+            '</div>' +
+            (a.notes ? '<p class="mt-2 text-xs text-gray-400 italic ml-14">' + escapeHtml(a.notes) + '</p>' : '') +
+          '</div>';
+        }).join('');
+      }
+
+      window.addEventListener('load', function() {
+        requireAuth();
+        renderDesktopSidebar('appointments');
+        renderBottomNav('menu');
+        todayVal = todayStr();
+
+        var pets   = getFaroPets();
+        var petSel = document.getElementById('pet-select');
+        allAppts   = [];
+
+        pets.forEach(function(pet) {
+          var opt = document.createElement('option');
+          opt.value = pet.id; opt.textContent = pet.name;
+          petSel.appendChild(opt);
+          (pet.appointments || []).forEach(function(a) {
+            allAppts.push(Object.assign({}, a, { petId: pet.id, petName: pet.name }));
+          });
+        });
+
+        // Set "Próximas" active by default
+        var upcomingBtn = document.querySelector('[data-filter="upcoming"]');
+        if (upcomingBtn) upcomingBtn.style.cssText = 'background:#F97316;color:#fff;border-color:#F97316;';
+
+        render();
+      });
+    </script>
+  </body>
+</html>

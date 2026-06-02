@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/iconWebLogo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil - Faro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { brand: { orange: '#F97316', 'orange-dark': '#EA580C', brown: '#451a03', 'brown-mid': '#7C3505', beige: '#FEF3C7', light: '#F4F4F0' } },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+          },
+        },
+      };
+    </script>
+    <style>
+      .blob-shape { border-radius: 42% 58% 65% 35% / 44% 38% 62% 56%; }
+      select { appearance: none; -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+      .f { border: 1px solid #E5E7EB; border-radius: 0.75rem; padding: 0.75rem; font-size: 0.875rem; background: #F9FAFB; width: 100%; transition: border-color 0.15s; }
+      .f:focus { border-color: #F97316; outline: none; }
+      .toggle { position: relative; width: 2.75rem; height: 1.5rem; }
+      .toggle input { opacity: 0; width: 0; height: 0; }
+      .toggle-track { position: absolute; inset: 0; border-radius: 9999px; background: #D1D5DB; cursor: pointer; transition: background 0.2s; }
+      .toggle input:checked + .toggle-track { background: #F97316; }
+      .toggle-knob { position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 9999px; background: white; transition: transform 0.2s; pointer-events: none; }
+      .toggle input:checked ~ .toggle-knob { transform: translateX(1.25rem); }
+    </style>
+  </head>
+  <body class="bg-brand-light font-sans text-gray-900 min-h-screen">
+
+    <div id="desktop-sidebar"></div>
+
+    <div class="lg:ml-64">
+
+      <!-- Profile hero -->
+      <div class="relative overflow-hidden pt-12 pb-8 px-5 lg:px-8" style="background-color:#7C3505;">
+        <div class="blob-shape absolute -top-10 -right-10 w-44 h-44" style="background-color:#451a03;opacity:0.4;" aria-hidden="true"></div>
+        <div class="relative z-10 flex items-center gap-4 max-w-4xl">
+          <!-- Avatar (photo or default) -->
+          <div class="relative flex-shrink-0">
+            <div id="avatar-circle" class="w-16 h-16 rounded-full flex items-center justify-center shadow-lg overflow-hidden" style="background-color:#F97316;">
+              <img id="avatar-img" class="w-full h-full object-cover hidden" alt="Foto do perfil" />
+              <svg id="avatar-icon" class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <button onclick="document.getElementById('avatar-input').click()" type="button"
+              class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white shadow flex items-center justify-center border-2" style="border-color:#F97316;" aria-label="Alterar foto">
+              <svg class="w-3 h-3" style="color:#F97316;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/></svg>
+            </button>
+            <input id="avatar-input" type="file" accept="image/*" class="hidden" onchange="handleAvatarPhoto(event)" />
+          </div>
+          <div>
+            <p id="profile-name" class="text-xl font-bold text-white leading-tight"></p>
+            <p id="profile-email" class="text-sm text-amber-200 mt-0.5"></p>
+          </div>
+        </div>
+        <a href="dashboard.html" class="lg:hidden absolute top-4 right-5 w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center" aria-label="Voltar">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </a>
+      </div>
+
+      <main class="px-4 sm:px-5 lg:px-8 py-5 pb-28 lg:pb-10 max-w-4xl">
+
+        <!-- Stats row -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 text-center">
+            <p id="stat-pets" class="text-3xl font-bold" style="color:#F97316;">0</p>
+            <p class="text-xs text-gray-500 mt-1">Pets cadastrados</p>
+          </div>
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 text-center">
+            <p id="stat-vaccines" class="text-3xl font-bold" style="color:#F97316;">0</p>
+            <p class="text-xs text-gray-500 mt-1">Vacinas registradas</p>
+          </div>
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 text-center">
+            <p id="stat-appts" class="text-3xl font-bold" style="color:#F97316;">0</p>
+            <p class="text-xs text-gray-500 mt-1">Consultas</p>
+          </div>
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 text-center">
+            <p id="stat-meds" class="text-3xl font-bold" style="color:#F97316;">0</p>
+            <p class="text-xs text-gray-500 mt-1">Medicamentos ativos</p>
+          </div>
+        </div>
+
+        <div class="lg:grid lg:grid-cols-2 lg:gap-6 space-y-5 lg:space-y-0">
+
+          <!-- Left column: edit profile + notifications -->
+          <div class="space-y-5">
+
+            <!-- Edit profile form -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h2 class="text-sm font-bold text-gray-900 mb-4">Editar perfil</h2>
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nome</label>
+                  <input id="edit-name" type="text" class="f"
+                    onfocus="this.style.borderColor='#F97316'" onblur="this.style.borderColor='#E5E7EB'" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1.5">E-mail</label>
+                  <input id="edit-email" type="email" class="f"
+                    onfocus="this.style.borderColor='#F97316'" onblur="this.style.borderColor='#E5E7EB'" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1.5">Telefone / WhatsApp</label>
+                  <input id="edit-phone" type="tel" placeholder="(11) 9 9999-9999" class="f"
+                    onfocus="this.style.borderColor='#F97316'" onblur="this.style.borderColor='#E5E7EB'" />
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Cidade</label>
+                    <input id="edit-city" type="text" placeholder="Sua cidade" class="f"
+                      onfocus="this.style.borderColor='#F97316'" onblur="this.style.borderColor='#E5E7EB'" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Estado</label>
+                    <select id="edit-state" class="f"
+                      onfocus="this.style.borderColor='#F97316'" onblur="this.style.borderColor='#E5E7EB'">
+                      <option value="">Selecione</option>
+                    </select>
+                  </div>
+                </div>
+                <button onclick="saveProfile()" class="w-full py-3 rounded-xl text-sm font-bold text-white mt-1 hover:opacity-90 transition-opacity" style="background-color:#F97316;">
+                  Salvar alterações
+                </button>
+              </div>
+            </div>
+
+            <!-- Notification preferences -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h2 class="text-sm font-bold text-gray-900 mb-4">Preferências de notificação</h2>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between gap-4">
+                  <div>
+                    <p class="text-sm font-semibold text-gray-800">Lembretes de vacinas</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Notifique vacinas próximas e atrasadas</p>
+                  </div>
+                  <label class="toggle flex-shrink-0">
+                    <input type="checkbox" id="notif-vaccines" onchange="saveNotifPrefs()" />
+                    <span class="toggle-track"></span>
+                    <span class="toggle-knob"></span>
+                  </label>
+                </div>
+                <div class="border-t border-gray-50"></div>
+                <div class="flex items-center justify-between gap-4">
+                  <div>
+                    <p class="text-sm font-semibold text-gray-800">Lembretes de consultas</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Notifique consultas agendadas próximas</p>
+                  </div>
+                  <label class="toggle flex-shrink-0">
+                    <input type="checkbox" id="notif-appointments" onchange="saveNotifPrefs()" />
+                    <span class="toggle-track"></span>
+                    <span class="toggle-knob"></span>
+                  </label>
+                </div>
+                <div class="border-t border-gray-50"></div>
+                <div class="flex items-center justify-between gap-4">
+                  <div>
+                    <p class="text-sm font-semibold text-gray-800">Lembretes de medicamentos</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Notifique horários de medicamentos ativos</p>
+                  </div>
+                  <label class="toggle flex-shrink-0">
+                    <input type="checkbox" id="notif-medicines" onchange="saveNotifPrefs()" />
+                    <span class="toggle-track"></span>
+                    <span class="toggle-knob"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right column: menu options -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+            <a href="dashboard.html" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors border-b border-gray-50">
+              <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#FFF7ED;">
+                <svg class="w-5 h-5" style="color:#F97316;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+              </span>
+              <span class="flex-1 text-sm font-semibold text-gray-800">Início</span>
+              <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+
+            <a href="notifications.html" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors border-b border-gray-50">
+              <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#FFF7ED;">
+                <svg class="w-5 h-5" style="color:#F97316;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+              </span>
+              <span class="flex-1 text-sm font-semibold text-gray-800">Notificações</span>
+              <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+
+            <a href="vaccines.html" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors border-b border-gray-50">
+              <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#FFF7ED;">
+                <svg class="w-5 h-5" style="color:#F97316;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+              </span>
+              <span class="flex-1 text-sm font-semibold text-gray-800">Vacinas</span>
+              <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+
+            <a href="medicines.html" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors border-b border-gray-50">
+              <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#FFF7ED;">
+                <svg class="w-5 h-5" style="color:#F97316;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+              </span>
+              <span class="flex-1 text-sm font-semibold text-gray-800">Medicamentos</span>
+              <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+
+            <a href="adoption.html" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors border-b border-gray-50">
+              <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#FFF7ED;">
+                <svg class="w-5 h-5" style="color:#F97316;" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="7" cy="4.5" r="2"/><circle cx="17" cy="4.5" r="2"/><circle cx="4" cy="10" r="1.5"/><circle cx="20" cy="10" r="1.5"/>
+                  <path d="M12 8.5c-3.59 0-6.5 2.46-6.5 6.5 0 2.49 2.01 4.5 4.5 4.5h4c2.49 0 4.5-2.01 4.5-4.5 0-4.04-2.91-6.5-6.5-6.5z"/>
+                </svg>
+              </span>
+              <span class="flex-1 text-sm font-semibold text-gray-800">Adoção</span>
+              <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+
+            <button onclick="logout()" class="w-full flex items-center gap-4 px-5 py-4 hover:bg-red-50 transition-colors text-left">
+              <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-red-50">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
+              </span>
+              <span class="text-sm font-semibold text-red-600">Sair da conta</span>
+            </button>
+
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="shared.js"></script>
+    <script>
+      function loadProfile() {
+        requireAuth();
+        renderDesktopSidebar('profile');
+        renderBottomNav('menu');
+
+        // Populate state select
+        var stateSel = document.getElementById('edit-state');
+        stateSel.innerHTML += buildStateOptions('');
+
+        var user = getFaroUser();
+        document.getElementById('profile-name').textContent  = user.name  || 'Tutor';
+        document.getElementById('profile-email').textContent = user.email || '';
+        document.getElementById('edit-name').value  = user.name  || '';
+        document.getElementById('edit-email').value = user.email || '';
+        document.getElementById('edit-phone').value = user.phone || '';
+        document.getElementById('edit-city').value  = user.city  || '';
+        if (user.state) stateSel.value = user.state;
+
+        // Avatar
+        if (user.photoUrl) {
+          document.getElementById('avatar-img').src = user.photoUrl;
+          document.getElementById('avatar-img').classList.remove('hidden');
+          document.getElementById('avatar-icon').classList.add('hidden');
+        }
+
+        // Notification prefs
+        var prefs = user.notifPrefs || {};
+        document.getElementById('notif-vaccines').checked     = prefs.vaccines     !== false;
+        document.getElementById('notif-appointments').checked = prefs.appointments !== false;
+        document.getElementById('notif-medicines').checked    = prefs.medicines    !== false;
+
+        // Stats
+        var pets = getFaroPets();
+        var vCount = 0, aCount = 0;
+        pets.forEach(function(p) {
+          vCount += (p.vaccines     || []).length;
+          aCount += (p.appointments || []).length;
+        });
+        var today    = todayStr();
+        var meds     = getFaroMedicines();
+        var activeMeds = meds.filter(function(m) { return !m.endDate || m.endDate >= today; }).length;
+
+        document.getElementById('stat-pets').textContent     = pets.length;
+        document.getElementById('stat-vaccines').textContent = vCount;
+        document.getElementById('stat-appts').textContent    = aCount;
+        document.getElementById('stat-meds').textContent     = activeMeds;
+      }
+
+      function handleAvatarPhoto(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          var img = new Image();
+          img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var SIZE = 200;
+            canvas.width = SIZE; canvas.height = SIZE;
+            var ctx = canvas.getContext('2d');
+            var side = Math.min(img.width, img.height);
+            var sx = (img.width  - side) / 2;
+            var sy = (img.height - side) / 2;
+            ctx.drawImage(img, sx, sy, side, side, 0, 0, SIZE, SIZE);
+            var url = canvas.toDataURL('image/jpeg', 0.85);
+
+            document.getElementById('avatar-img').src = url;
+            document.getElementById('avatar-img').classList.remove('hidden');
+            document.getElementById('avatar-icon').classList.add('hidden');
+
+            var user = getFaroUser();
+            user.photoUrl = url;
+            saveFaroUser(user);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function saveProfile() {
+        var user = getFaroUser();
+        user.name  = document.getElementById('edit-name').value.trim()  || user.name;
+        user.email = document.getElementById('edit-email').value.trim() || user.email;
+        user.phone = document.getElementById('edit-phone').value.trim();
+        user.city  = document.getElementById('edit-city').value.trim();
+        user.state = document.getElementById('edit-state').value;
+        saveFaroUser(user);
+        document.getElementById('profile-name').textContent  = user.name;
+        document.getElementById('profile-email').textContent = user.email;
+        alert('Perfil atualizado.');
+      }
+
+      function saveNotifPrefs() {
+        var user = getFaroUser();
+        user.notifPrefs = {
+          vaccines:     document.getElementById('notif-vaccines').checked,
+          appointments: document.getElementById('notif-appointments').checked,
+          medicines:    document.getElementById('notif-medicines').checked,
+        };
+        saveFaroUser(user);
+      }
+
+      function logout() {
+        if (confirm('Deseja sair da conta?')) {
+          clearFaroUser();
+          window.location.href = 'login.html';
+        }
+      }
+
+      window.addEventListener('load', loadProfile);
+    </script>
+  </body>
+</html>

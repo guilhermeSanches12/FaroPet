@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/iconWebLogo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carteira de Vacinas - Faro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { brand: { orange: '#F97316', 'orange-dark': '#EA580C', brown: '#451a03', 'brown-mid': '#7C3505', beige: '#FEF3C7', light: '#F4F4F0' } },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+          },
+        },
+      };
+    </script>
+    <style>
+      select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+      .tab-active { background: #F97316; color: #fff; }
+      .tab-inactive { background: #fff; color: #6B7280; }
+    </style>
+  </head>
+  <body class="bg-brand-light font-sans text-gray-900 min-h-screen">
+
+    <div id="desktop-sidebar"></div>
+
+    <div class="lg:ml-64">
+      <!-- Header -->
+      <div class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+        <div class="flex items-center px-4 lg:px-8 py-4">
+          <a href="vaccines.html" class="lg:hidden w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mr-3" aria-label="Voltar">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </a>
+          <div class="flex-1">
+            <h1 class="text-lg lg:text-2xl font-bold text-gray-900">Carteira de Vacinas</h1>
+            <p class="text-xs text-gray-400 hidden lg:block">Histórico completo de vacinação dos seus pets</p>
+          </div>
+          <a href="add-vaccine.html" class="flex items-center gap-2 px-3 lg:px-4 py-2 rounded-xl text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity" style="background:#F97316;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            <span class="hidden sm:inline">Nova vacina</span>
+          </a>
+        </div>
+      </div>
+
+      <main class="px-4 sm:px-5 lg:px-8 py-5 pb-28 lg:pb-10">
+
+        <!-- Filters -->
+        <div class="flex flex-col sm:flex-row gap-3 mb-5 max-w-4xl">
+          <select id="filter-pet" onchange="applyFilters()"
+            class="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white text-gray-700 focus:outline-none focus:border-orange-400">
+            <option value="">Todos os pets</option>
+          </select>
+          <select id="filter-status" onchange="applyFilters()"
+            class="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white text-gray-700 focus:outline-none focus:border-orange-400">
+            <option value="">Todos os status</option>
+            <option value="completed">Tomadas</option>
+            <option value="scheduled">Agendadas</option>
+            <option value="pending">Não agendadas</option>
+            <option value="overdue">Atrasadas</option>
+            <option value="next-dose">Próxima dose</option>
+          </select>
+        </div>
+
+        <!-- Summary cards -->
+        <div id="summary-row" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 max-w-4xl"></div>
+
+        <!-- Wallet list — grouped by pet -->
+        <div id="wallet-content" class="max-w-4xl"></div>
+
+        <!-- Empty state -->
+        <div id="wallet-empty" class="hidden max-w-4xl bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+          <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:#FFF7ED;">
+            <svg class="w-8 h-8" style="color:#F97316;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
+          </div>
+          <p class="text-base font-bold text-gray-700 mb-1">Carteira vazia</p>
+          <p class="text-sm text-gray-400 mb-5">Nenhuma vacina encontrada com os filtros selecionados.</p>
+          <a href="add-vaccine.html" class="inline-block px-6 py-3 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity" style="background:#F97316;">Adicionar vacina</a>
+        </div>
+
+      </main>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="shared.js"></script>
+    <script>
+      var allVaccines = [];
+
+      function buildSummaryCard(label, count, color) {
+        return '<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">' +
+          '<p class="text-2xl font-bold" style="color:' + color + ';">' + count + '</p>' +
+          '<p class="text-xs text-gray-500 mt-0.5">' + escapeHtml(label) + '</p>' +
+        '</div>';
+      }
+
+      function buildWalletCard(v) {
+        var c     = vaccineStatusColors(v.status);
+        var label = vaccineStatusLabel(v.status);
+        var href  = 'vaccine-detail.html?id=' + encodeURIComponent(v.id) + '&petId=' + encodeURIComponent(v.petId);
+        var doseTag = (v.doseNumber && v.totalDoses) ? 'Dose ' + v.doseNumber + '/' + v.totalDoses : '';
+
+        return '<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-md transition-shadow">' +
+          '<div class="flex items-start justify-between gap-3">' +
+            '<div class="flex items-center gap-3 flex-1 min-w-0">' +
+              '<div class="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style="background:#F97316;">' +
+                '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>' +
+              '</div>' +
+              '<div class="min-w-0">' +
+                '<p class="font-semibold text-sm text-gray-900 truncate">' + escapeHtml(v.name) + '</p>' +
+                (doseTag ? '<p class="text-xs text-gray-400">' + escapeHtml(doseTag) + '</p>' : '') +
+              '</div>' +
+            '</div>' +
+            '<span class="flex-shrink-0 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold" style="color:' + c.text + ';background:' + c.bg + ';">' + escapeHtml(label) + '</span>' +
+          '</div>' +
+          '<div class="mt-3 grid grid-cols-2 gap-3 text-xs">' +
+            '<div><p class="text-gray-400 font-medium">Data de aplicação</p><p class="text-gray-700 font-semibold">' + formatDate(v.date) + '</p></div>' +
+            '<div><p class="text-gray-400 font-medium">Próxima dose</p><p class="text-gray-700 font-semibold">' + formatDate(v.scheduledDate) + '</p></div>' +
+          '</div>' +
+          (v.notes ? '<p class="mt-2 text-xs text-gray-400 truncate">' + escapeHtml(v.notes) + '</p>' : '') +
+          '<a href="' + href + '" class="mt-3 flex items-center gap-1.5 text-xs font-semibold hover:underline" style="color:#F97316;">Ver detalhes <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></a>' +
+        '</div>';
+      }
+
+      function applyFilters() {
+        var filterPet    = document.getElementById('filter-pet').value;
+        var filterStatus = document.getElementById('filter-status').value;
+
+        var filtered = allVaccines.filter(function(v) {
+          if (filterPet    && v.petId  !== filterPet)    return false;
+          if (filterStatus && v.status !== filterStatus) return false;
+          return true;
+        });
+
+        renderWallet(filtered);
+      }
+
+      function renderWallet(vaccines) {
+        var content = document.getElementById('wallet-content');
+        var empty   = document.getElementById('wallet-empty');
+
+        if (vaccines.length === 0) {
+          content.innerHTML = '';
+          empty.classList.remove('hidden');
+          return;
+        }
+        empty.classList.add('hidden');
+
+        // Group by pet
+        var byPet = {};
+        vaccines.forEach(function(v) {
+          if (!byPet[v.petId]) byPet[v.petId] = { petName: v.petName, vaccines: [] };
+          byPet[v.petId].vaccines.push(v);
+        });
+
+        var html = '';
+        Object.keys(byPet).forEach(function(petId) {
+          var group = byPet[petId];
+          html += '<div class="mb-6">' +
+            '<div class="flex items-center gap-2 mb-3">' +
+              '<div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#7C3505;">' +
+                '<svg class="w-4 h-4 text-white" viewBox="0 0 32 32" fill="currentColor"><circle cx="10" cy="9" r="3"/><circle cx="22" cy="9" r="3"/><path d="M16 13c-4.97 0-9 4.03-9 9 0 1.93.61 3.71 1.64 5.17C9.38 28.23 10.62 29 12 29h8c1.38 0 2.62-.77 3.36-1.83A8.959 8.959 0 0025 22c0-4.97-4.03-9-9-9z"/></svg>' +
+              '</div>' +
+              '<h2 class="text-base font-bold text-gray-800">' + escapeHtml(group.petName) + '</h2>' +
+              '<span class="text-xs text-gray-400 font-medium">' + group.vaccines.length + ' vacina(s)</span>' +
+            '</div>' +
+            '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">' +
+              group.vaccines.map(buildWalletCard).join('') +
+            '</div>' +
+          '</div>';
+        });
+
+        content.innerHTML = html;
+      }
+
+      window.addEventListener('load', function() {
+        requireAuth();
+        renderDesktopSidebar('wallet');
+        renderBottomNav('menu');
+
+        var pets     = getFaroPets();
+        var petSel   = document.getElementById('filter-pet');
+        allVaccines  = [];
+
+        pets.forEach(function(pet) {
+          var opt = document.createElement('option');
+          opt.value       = pet.id;
+          opt.textContent = pet.name;
+          petSel.appendChild(opt);
+
+          (pet.vaccines || []).forEach(function(v) {
+            allVaccines.push(Object.assign({}, v, { petId: pet.id, petName: pet.name }));
+          });
+        });
+
+        // Sort by date desc
+        allVaccines.sort(function(a, b) {
+          var da = a.date || a.scheduledDate || '';
+          var db = b.date || b.scheduledDate || '';
+          return da < db ? 1 : -1;
+        });
+
+        // Summary
+        var taken    = allVaccines.filter(function(v){ return v.status === 'completed'; }).length;
+        var sched    = allVaccines.filter(function(v){ return v.status === 'scheduled'; }).length;
+        var pending  = allVaccines.filter(function(v){ return v.status === 'pending' || v.status === 'next-dose'; }).length;
+        var overdue  = allVaccines.filter(function(v){ return v.status === 'overdue'; }).length;
+        document.getElementById('summary-row').innerHTML =
+          buildSummaryCard('Tomadas',      taken,   '#16A34A') +
+          buildSummaryCard('Agendadas',    sched,   '#F97316') +
+          buildSummaryCard('Pendentes',    pending, '#EA580C') +
+          buildSummaryCard('Atrasadas',    overdue, '#DC2626');
+
+        renderWallet(allVaccines);
+      });
+    </script>
+  </body>
+</html>

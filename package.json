@@ -1,0 +1,15 @@
+{
+  "name": "faropet",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "dev:backend": "npm --prefix backend run start:dev",
+    "build:backend": "npm --prefix backend run build"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}

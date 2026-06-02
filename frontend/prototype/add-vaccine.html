@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/iconWebLogo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adicionar Vacina - Faro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { brand: { orange: '#F97316', 'orange-dark': '#EA580C', brown: '#451a03', 'brown-mid': '#7C3505', beige: '#FEF3C7', light: '#F4F4F0' } },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+          },
+        },
+      };
+    </script>
+    <style>
+      select, input, textarea { appearance: none; -webkit-appearance: none; }
+      select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+      .field-focus:focus { border-color: #F97316; outline: none; }
+    </style>
+  </head>
+  <body class="bg-brand-light font-sans text-gray-900 min-h-screen">
+
+    <div id="desktop-sidebar"></div>
+
+    <div class="lg:ml-64">
+      <!-- Page header -->
+      <div class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+        <div class="flex items-center px-4 lg:px-8 py-4">
+          <a href="vaccines.html" class="lg:hidden w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mr-3" aria-label="Voltar">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </a>
+          <h1 class="text-lg lg:text-2xl font-bold text-gray-900 flex-1">Adicionar Vacina</h1>
+        </div>
+      </div>
+
+      <main class="px-4 sm:px-5 lg:px-8 py-6 pb-28 lg:pb-10 max-w-2xl lg:max-w-3xl mx-auto lg:mx-0">
+        <form id="vaccine-form" onsubmit="handleSubmit(event)" class="space-y-5">
+
+          <!-- Step indicator -->
+          <div class="flex items-center gap-2 text-xs text-gray-400 font-medium mb-2">
+            <span class="px-2.5 py-1 rounded-full text-white text-xs font-semibold" style="background:#F97316;">Informações da vacina</span>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-5">
+
+            <!-- Pet selector -->
+            <div>
+              <label for="pet-select" class="block text-xs font-semibold text-gray-600 mb-1.5">Pet *</label>
+              <select id="pet-select" required onchange="onPetChange()"
+                class="w-full border border-gray-200 rounded-xl px-3 py-3.5 text-sm bg-gray-50 field-focus transition">
+                <option value="" disabled selected>Selecione o pet</option>
+              </select>
+              <p id="no-pets-msg" class="hidden mt-1.5 text-xs text-red-500">
+                Nenhum pet cadastrado.
+                <a href="add-pet.html" class="underline font-semibold">Cadastrar pet</a>
+              </p>
+            </div>
+
+            <!-- Vaccine type -->
+            <div>
+              <label for="vaccine-type" class="block text-xs font-semibold text-gray-600 mb-1.5">Tipo de vacina *</label>
+              <select id="vaccine-type" required onchange="onVaccineTypeChange()"
+                class="w-full border border-gray-200 rounded-xl px-3 py-3.5 text-sm bg-gray-50 field-focus transition">
+                <option value="" disabled selected>Selecione o pet primeiro</option>
+              </select>
+              <p id="vaccine-desc" class="mt-1.5 text-xs text-gray-400 hidden"></p>
+            </div>
+
+            <!-- Dose info (auto-filled) -->
+            <div id="dose-info" class="hidden rounded-xl p-3.5 border" style="background:#FFF7ED;border-color:#FED7AA;">
+              <p class="text-xs font-semibold text-orange-700" id="dose-info-text"></p>
+            </div>
+
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-5">
+
+            <!-- Already taken checkbox -->
+            <div>
+              <label class="flex items-center gap-3 cursor-pointer select-none">
+                <div class="relative flex-shrink-0">
+                  <input type="checkbox" id="already-taken" onchange="toggleDateFields()" class="sr-only peer" />
+                  <div class="w-5 h-5 rounded border-2 border-gray-300 peer-checked:border-orange-500 peer-checked:bg-orange-500 transition-colors flex items-center justify-center">
+                    <svg class="w-3 h-3 text-white hidden peer-checked-icon" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                  </div>
+                </div>
+                <span class="text-sm font-semibold text-gray-800">Vacina já tomada</span>
+              </label>
+              <p class="mt-1 text-xs text-gray-400 ml-8">Marque se seu pet já tomou essa vacina.</p>
+            </div>
+
+            <!-- Date taken (shown when already-taken is checked) -->
+            <div id="date-taken-block" class="hidden">
+              <label for="date-taken" class="block text-xs font-semibold text-gray-600 mb-1.5">Data de aplicação *</label>
+              <input type="date" id="date-taken" class="w-full border border-gray-200 rounded-xl px-3 py-3.5 text-sm bg-gray-50 field-focus transition" />
+            </div>
+
+            <!-- Scheduled date (shown when not already taken) -->
+            <div id="scheduled-date-block">
+              <label for="scheduled-date" class="block text-xs font-semibold text-gray-600 mb-1.5">Data agendada <span class="font-normal text-gray-400">(opcional)</span></label>
+              <input type="date" id="scheduled-date" class="w-full border border-gray-200 rounded-xl px-3 py-3.5 text-sm bg-gray-50 field-focus transition" />
+              <p class="mt-1.5 text-xs text-gray-400">Se ainda não agendou, deixe em branco. O status ficará como "Não agendada".</p>
+            </div>
+
+          </div>
+
+          <!-- Observations -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <label for="vaccine-notes" class="block text-xs font-semibold text-gray-600 mb-1.5">Observações <span class="font-normal text-gray-400">(opcional)</span></label>
+            <textarea id="vaccine-notes" rows="3" placeholder="Reações, clínica, lote, informações extras..."
+              class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm bg-gray-50 field-focus resize-none transition"></textarea>
+          </div>
+
+          <!-- Error message -->
+          <div id="form-error" class="hidden px-4 py-3 rounded-xl bg-red-50 border border-red-200">
+            <p id="form-error-text" class="text-sm text-red-600 font-medium"></p>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-col-reverse sm:flex-row gap-3">
+            <a href="vaccines.html" class="flex-1 py-3.5 text-center rounded-xl text-sm font-semibold border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-colors">
+              Cancelar
+            </a>
+            <button type="submit" class="flex-1 py-3.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity" style="background:#F97316;">
+              Salvar vacina
+            </button>
+          </div>
+
+        </form>
+      </main>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="shared.js"></script>
+    <script>
+      var selectedPet       = null;
+      var selectedRule      = null;
+      var nextDoseNumber    = 1;
+
+      function showError(msg) {
+        document.getElementById('form-error-text').textContent = msg;
+        document.getElementById('form-error').classList.remove('hidden');
+      }
+      function hideError() {
+        document.getElementById('form-error').classList.add('hidden');
+      }
+
+      function onPetChange() {
+        hideError();
+        var petId = document.getElementById('pet-select').value;
+        var pets  = getFaroPets();
+        selectedPet = pets.find(function(p) { return p.id === petId; }) || null;
+        selectedRule = null;
+
+        var typeSelect = document.getElementById('vaccine-type');
+        typeSelect.innerHTML = '<option value="" disabled selected>Selecione a vacina</option>';
+
+        if (!selectedPet) return;
+
+        var rules = VACCINE_DB[selectedPet.species] || [];
+        if (rules.length === 0) {
+          typeSelect.innerHTML = '<option value="" disabled selected>Sem vacinas cadastradas para esta espécie</option>';
+          return;
+        }
+        rules.forEach(function(r) {
+          var opt = document.createElement('option');
+          opt.value = r.id;
+          opt.textContent = r.name;
+          typeSelect.appendChild(opt);
+        });
+        document.getElementById('dose-info').classList.add('hidden');
+      }
+
+      function onVaccineTypeChange() {
+        hideError();
+        if (!selectedPet) return;
+        var ruleId = document.getElementById('vaccine-type').value;
+        var rules  = VACCINE_DB[selectedPet.species] || [];
+        selectedRule = rules.find(function(r) { return r.id === ruleId; }) || null;
+
+        var descEl = document.getElementById('vaccine-desc');
+        if (selectedRule && selectedRule.description) {
+          descEl.textContent = selectedRule.description;
+          descEl.classList.remove('hidden');
+        } else {
+          descEl.classList.add('hidden');
+        }
+
+        // Calculate which dose is next
+        if (selectedRule && selectedPet) {
+          var existing = (selectedPet.vaccines || []).filter(function(v) {
+            return v.vaccineRuleId === selectedRule.id && v.status === 'completed';
+          });
+          nextDoseNumber = existing.length + 1;
+          var doseInfoEl = document.getElementById('dose-info');
+          var doseText   = document.getElementById('dose-info-text');
+          if (selectedRule.totalDoses > 1) {
+            doseText.textContent = 'Esta será a dose ' + nextDoseNumber + ' de ' + selectedRule.totalDoses + ' para ' + selectedPet.name + '.';
+            doseInfoEl.classList.remove('hidden');
+          } else {
+            doseInfoEl.classList.add('hidden');
+            nextDoseNumber = 1;
+          }
+        }
+      }
+
+      function toggleDateFields() {
+        var taken = document.getElementById('already-taken').checked;
+        document.getElementById('date-taken-block').classList.toggle('hidden', !taken);
+        document.getElementById('scheduled-date-block').classList.toggle('hidden', taken);
+        // Visually update checkbox appearance
+        var checkIcon = document.querySelector('.peer-checked-icon');
+        if (checkIcon) checkIcon.classList.toggle('hidden', !taken);
+      }
+
+      // Custom checkbox rendering
+      document.addEventListener('change', function(e) {
+        if (e.target && e.target.id === 'already-taken') {
+          var box  = e.target.nextElementSibling;
+          var icon = box ? box.querySelector('svg') : null;
+          if (box)  box.classList.toggle('border-orange-500', e.target.checked);
+          if (box)  box.classList.toggle('bg-orange-500',    e.target.checked);
+          if (icon) icon.classList.toggle('hidden',          !e.target.checked);
+        }
+      });
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        hideError();
+
+        if (!selectedPet) { showError('Selecione um pet.'); return; }
+        if (!selectedRule) { showError('Selecione o tipo de vacina.'); return; }
+
+        var alreadyTaken  = document.getElementById('already-taken').checked;
+        var dateTaken     = document.getElementById('date-taken').value;
+        var scheduledDate = document.getElementById('scheduled-date').value;
+        var notes         = document.getElementById('vaccine-notes').value.trim();
+
+        if (alreadyTaken && !dateTaken) { showError('Informe a data em que a vacina foi aplicada.'); return; }
+
+        var status = alreadyTaken ? 'completed'
+          : (scheduledDate ? 'scheduled' : 'pending');
+
+        var vaccine = {
+          id:            String(Date.now()),
+          name:          selectedRule.name,
+          vaccineRuleId: selectedRule.id,
+          doseNumber:    nextDoseNumber,
+          totalDoses:    selectedRule.totalDoses,
+          date:          alreadyTaken ? dateTaken : null,
+          scheduledDate: alreadyTaken ? null : (scheduledDate || null),
+          status:        status,
+          notes:         notes,
+          petId:         selectedPet.id,
+          petName:       selectedPet.name,
+          autoGenerated: false,
+        };
+
+        // Save
+        var pets = getFaroPets();
+        var idx  = pets.findIndex(function(p) { return p.id === selectedPet.id; });
+        if (idx === -1) { showError('Pet não encontrado.'); return; }
+        if (!pets[idx].vaccines) pets[idx].vaccines = [];
+        pets[idx].vaccines.push(vaccine);
+
+        // Auto-generate next dose if this was marked as taken
+        if (alreadyTaken) {
+          var nextDose = generateNextDose(selectedPet, vaccine);
+          if (nextDose) {
+            nextDose.petId   = selectedPet.id;
+            nextDose.petName = selectedPet.name;
+            pets[idx].vaccines.push(nextDose);
+          }
+        }
+
+        saveFaroPets(pets);
+        window.location.href = 'vaccines.html';
+      }
+
+      window.addEventListener('load', function() {
+        requireAuth();
+        renderDesktopSidebar('vaccines');
+        renderBottomNav('vaccines');
+
+        var pets   = getFaroPets();
+        var select = document.getElementById('pet-select');
+
+        if (pets.length === 0) {
+          document.getElementById('no-pets-msg').classList.remove('hidden');
+          select.disabled = true;
+        } else {
+          pets.forEach(function(pet) {
+            var opt = document.createElement('option');
+            opt.value       = pet.id;
+            opt.textContent = pet.name + ' (' + pet.species + ')';
+            select.appendChild(opt);
+          });
+        }
+
+        // Pre-select pet if passed via URL
+        var params = new URLSearchParams(window.location.search);
+        var preId  = params.get('petId');
+        if (preId) {
+          select.value = preId;
+          onPetChange();
+        }
+      });
+    </script>
+  </body>
+</html>

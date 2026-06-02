@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/iconWebLogo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novo Medicamento - Faro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { brand: { orange: '#F97316', 'orange-dark': '#EA580C', brown: '#451a03', 'brown-mid': '#7C3505', beige: '#FEF3C7', light: '#F4F4F0' } },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+          },
+        },
+      };
+    </script>
+    <style>
+      select, input, textarea { appearance: none; -webkit-appearance: none; }
+      select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+      .f { border: 1px solid #E5E7EB; border-radius: 0.75rem; padding: 0.875rem 0.75rem; font-size: 0.875rem; background: #F9FAFB; width: 100%; transition: border-color 0.15s; }
+      .f:focus { border-color: #F97316; outline: none; }
+    </style>
+  </head>
+  <body class="bg-brand-light font-sans text-gray-900 min-h-screen">
+
+    <div id="desktop-sidebar"></div>
+
+    <div class="lg:ml-64">
+      <div class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+        <div class="flex items-center px-4 lg:px-8 py-4">
+          <a href="medicines.html" class="lg:hidden w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mr-3" aria-label="Voltar">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </a>
+          <h1 class="text-lg lg:text-2xl font-bold text-gray-900 flex-1">Novo Medicamento</h1>
+        </div>
+      </div>
+
+      <main class="px-4 sm:px-5 lg:px-8 py-6 pb-28 lg:pb-10 max-w-2xl lg:max-w-3xl mx-auto lg:mx-0">
+        <form id="med-form" onsubmit="handleSubmit(event)" class="space-y-5">
+
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
+
+            <div>
+              <label for="pet-select" class="block text-xs font-semibold text-gray-600 mb-1.5">Pet *</label>
+              <select id="pet-select" required class="f">
+                <option value="" disabled selected>Selecione o pet</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="med-name" class="block text-xs font-semibold text-gray-600 mb-1.5">Nome do medicamento *</label>
+              <input type="text" id="med-name" required placeholder="Ex: Drontal, Simparic, Frontline..." class="f" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="med-dosage" class="block text-xs font-semibold text-gray-600 mb-1.5">Dosagem *</label>
+                <input type="text" id="med-dosage" required placeholder="Ex: 1 comprimido" class="f" />
+              </div>
+              <div>
+                <label for="med-frequency" class="block text-xs font-semibold text-gray-600 mb-1.5">Frequência *</label>
+                <select id="med-frequency" required class="f">
+                  <option value="" disabled selected>Selecione</option>
+                  <option value="1x ao dia">1x ao dia</option>
+                  <option value="2x ao dia">2x ao dia</option>
+                  <option value="3x ao dia">3x ao dia</option>
+                  <option value="A cada 8 horas">A cada 8 horas</option>
+                  <option value="A cada 12 horas">A cada 12 horas</option>
+                  <option value="1x por semana">1x por semana</option>
+                  <option value="1x por mês">1x por mês</option>
+                  <option value="Uso contínuo">Uso contínuo</option>
+                  <option value="Conforme necessário">Conforme necessário</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="med-time" class="block text-xs font-semibold text-gray-600 mb-1.5">Horário principal</label>
+              <input type="time" id="med-time" class="f" />
+            </div>
+
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="start-date" class="block text-xs font-semibold text-gray-600 mb-1.5">Data de início *</label>
+                <input type="date" id="start-date" required class="f" />
+              </div>
+              <div>
+                <label for="end-date" class="block text-xs font-semibold text-gray-600 mb-1.5">Data de término <span class="font-normal text-gray-400">(opcional)</span></label>
+                <input type="date" id="end-date" class="f" />
+              </div>
+            </div>
+
+            <div>
+              <label for="med-notes" class="block text-xs font-semibold text-gray-600 mb-1.5">Observações <span class="font-normal text-gray-400">(opcional)</span></label>
+              <textarea id="med-notes" rows="3" placeholder="Prescrição, instruções do veterinário, efeitos esperados..." class="f resize-none"></textarea>
+            </div>
+
+          </div>
+
+          <div id="form-error" class="hidden px-4 py-3 rounded-xl bg-red-50 border border-red-200">
+            <p id="form-error-text" class="text-sm text-red-600 font-medium"></p>
+          </div>
+
+          <div class="flex flex-col-reverse sm:flex-row gap-3">
+            <a href="medicines.html" class="flex-1 py-3.5 text-center rounded-xl text-sm font-semibold border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-colors">
+              Cancelar
+            </a>
+            <button type="submit" class="flex-1 py-3.5 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity shadow-sm" style="background:#F97316;">
+              Salvar medicamento
+            </button>
+          </div>
+
+        </form>
+      </main>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="shared.js"></script>
+    <script>
+      function handleSubmit(e) {
+        e.preventDefault();
+        var petId = document.getElementById('pet-select').value;
+        if (!petId) {
+          document.getElementById('form-error-text').textContent = 'Selecione um pet.';
+          document.getElementById('form-error').classList.remove('hidden');
+          return;
+        }
+        document.getElementById('form-error').classList.add('hidden');
+
+        var pets   = getFaroPets();
+        var pet    = pets.find(function(p){ return p.id === petId; });
+        var meds   = getFaroMedicines();
+        var med    = {
+          id:         String(Date.now()),
+          petId:      petId,
+          petName:    pet ? pet.name : '',
+          name:       document.getElementById('med-name').value.trim(),
+          dosage:     document.getElementById('med-dosage').value.trim(),
+          frequency:  document.getElementById('med-frequency').value,
+          time:       document.getElementById('med-time').value || null,
+          startDate:  document.getElementById('start-date').value,
+          endDate:    document.getElementById('end-date').value || null,
+          notes:      document.getElementById('med-notes').value.trim(),
+        };
+        meds.push(med);
+        saveFaroMedicines(meds);
+        window.location.href = 'medicines.html';
+      }
+
+      window.addEventListener('load', function() {
+        requireAuth();
+        renderDesktopSidebar('medicines');
+        renderBottomNav('menu');
+        document.getElementById('start-date').value = todayStr();
+
+        var pets   = getFaroPets();
+        var select = document.getElementById('pet-select');
+        if (pets.length === 0) {
+          var opt = document.createElement('option');
+          opt.textContent = 'Nenhum pet cadastrado';
+          opt.disabled = true;
+          select.appendChild(opt);
+          select.disabled = true;
+        } else {
+          pets.forEach(function(pet) {
+            var opt = document.createElement('option');
+            opt.value = pet.id;
+            opt.textContent = pet.name + ' (' + pet.species + ')';
+            select.appendChild(opt);
+          });
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var preId  = params.get('petId');
+        if (preId) select.value = preId;
+      });
+    </script>
+  </body>
+</html>
