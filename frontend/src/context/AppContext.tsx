@@ -241,7 +241,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const updatePet = async (p: Pet) => {
     try {
-      const updated = await petsApi.update(p.id, { ...p, type: p.type });
+      const { id, userId, createdAt, updatedAt, deletedAt, isSynced, ...rest } = p;
+      const updated = await petsApi.update(p.id, { ...rest, type: p.type });
       setPets(prev => prev.map(x => x.id === p.id ? apiPetToPet(updated) : x));
       showToast("Pet atualizado!");
     } catch (err: any) { showToast(err.message ?? "Erro ao atualizar pet", "error"); }
